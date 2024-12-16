@@ -13,53 +13,58 @@ public class EnemyAttack : MonoBehaviour
     private int enemyAttackPower;
 
     [SerializeField] 
-    private Player_Battle_Controller Placon;
+    private Player_Battle_Controller pbc;
     [SerializeField] 
-    private Player_Status_Controller Plasta;
+    private Player_Status_Controller psc;
 
-    [SerializeField] private GameManager GameManager;
-    private GameObject Manager;
-    private GameObject PlaOb;
+    [SerializeField] private GameManager gameManager;
+    private GameObject manager; //説明書きましょうあとこれはGameManagerを探すために必要なゲームオブジェクトならmanagerGOとかにしよう
+    private GameObject playerObj;　//これはPlayerについているOBJなら、playerObjectにしてください
 
-    private bool attaking = false;
+    private bool attacking = false;
     // Start is called before the first frame update
     void Awake()
     { 
-        Manager = GameObject.FindWithTag("GameManager"); 
-        PlaOb = GameObject.FindWithTag("Player");
+        manager = GameObject.FindWithTag("GameManager"); 
+        playerObj = GameObject.FindWithTag("Player");
        
        
-        Placon = PlaOb.GetComponent<Player_Battle_Controller>();
-        Plasta = PlaOb.GetComponent <Player_Status_Controller>();
+        pbc = playerObj.GetComponent<Player_Battle_Controller>();
+        psc = playerObj.GetComponent <Player_Status_Controller>();
        
-        GameManager = Manager.GetComponent<GameManager>();
+        gameManager = manager.GetComponent<GameManager>();
     }
 
-    // Update is called once per frame
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == PlaOb && Placon.Avoidancing == false&& Placon.IsDown == false&& attaking == false)
+        if (other.gameObject == playerObj && pbc.Avoidancing == false&& pbc.IsDown == false&& attacking == false)
         {
             
             EnemyAttackHit();
         }
     }
 
+/// <summary>
+/// プレイヤーに攻撃を当てるメソッド
+/// </summary>
     private void EnemyAttackHit()
     { 
-        Placon.OnHit();
-        Placon.AnimCon.SetTrigger("Hit");
-        GameManager.Player_Damage_Sound();
-        playerHitDamage = GameManager.DamegeCalculation(Plasta.PlayerDefance,enemyAttackPower);
-        Plasta.LivePlayerHP -= playerHitDamage;
-        GameManager.DamageText(PlaOb.GetComponent<CharacterController>(),playerHitDamage,0.2f);
+        pbc.OnHit();
+        pbc.AnimCon.SetTrigger("Hit");
+        gameManager.Player_Damage_Sound();
+        playerHitDamage = gameManager.DamegeCalculation(psc.PlayerDefance,enemyAttackPower);
+        psc.LivePlayerHP -= playerHitDamage;
+        gameManager.DamageText(playerObj.GetComponent<CharacterController>(),playerHitDamage,0.2f);//マジックナンバー発見 0.2fは変数にしてください  
 
-        attaking = true;
-        Invoke("AttackingFalse", 0.2f);
+        attacking = true;
+        Invoke("AttackingFalse", 0.2f); //マジックナンバー発見 0.2fは変数にしてください    
     }
 
+/// <summary>
+/// 攻撃中のフラグをfalseにするメソッド
+/// </summary>
     private void AttackingFalse()
     { 
-    attaking = false;
+        attacking = false;
     }
 }

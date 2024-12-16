@@ -6,12 +6,16 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// プレイヤーの移動を制御するクラスです。ですよね？なぜRest？？
+/// Moveとかの方がいいのでは？
+/// </summary>
 public class Player_Rest_Controller : MonoBehaviour
 {
     [SerializeField] 
     private float speed = 5f;//キャラクターのスピード
     [SerializeField]
-    private float jumpForse = 5f;//キャラクターのジャンプ力
+    private float jumpForce = 5f;//キャラクターのジャンプ力
     [SerializeField] 
     private float animSpeed = 1.5f;//アニメーションの更新速度
     [SerializeField] 
@@ -28,12 +32,12 @@ public class Player_Rest_Controller : MonoBehaviour
     private CinemachineInputAxisController cameraAxis;
 
     [SerializeField]
-    private GameManager GM;
+    private GameManager gameManager;
 
     [SerializeField]
-    private GameObject FindGM;
+    private GameObject findGM;
 
-    private PlayerInput plaIn;//インプットシステム
+    private PlayerInput playerInput;//インプットシステム
     private CharacterController charaCon;//キャラクターコントローラー
     private Animator animCon;//アニメーター
 
@@ -41,7 +45,7 @@ public class Player_Rest_Controller : MonoBehaviour
 
     private bool groundedPlayer = false;//地面にいるかどうか判定用
 
-    private bool isJumpping = false;//ジャンプ中判定
+    private bool isJumping = false;//ジャンプ中判定
 
     private bool starting = true;//開幕ジャンプ中アニメ封じ用
 
@@ -49,11 +53,11 @@ public class Player_Rest_Controller : MonoBehaviour
 
     Vector2 moveInput;//移動のベクトル
 
-    private float moveInputAbs_x;
+    private float moveInputAbs_x; //説明書いて
 
-    private float moveInputAbs_y;
+    private float moveInputAbs_y; //説明書いて
 
-    private float moveInputAbs;
+    private float moveInputAbs; //zではない？
 
     [SerializeField] private float playerVelocity;//縦方向のベクトル
 
@@ -64,12 +68,11 @@ public class Player_Rest_Controller : MonoBehaviour
     [SerializeField]
     LayerMask groundLayers = default;
 
-    private float cool = 0.3f;//コルーチンの間隔
+    private float coolTime = 0.3f;//コルーチンの間隔
 
     //---プロパティ---//
-    public PlayerInput PlaIn { get => plaIn; set => plaIn = value; }
+    public PlayerInput Player_Input { get => playerInput; set => playerInput = value; }
 
-    // Start is called before the first frame update
     public void OnMove(InputAction.CallbackContext context)
     {
 
@@ -78,12 +81,12 @@ public class Player_Rest_Controller : MonoBehaviour
     }
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (!context.performed || !groundedPlayer || isJumpping == true ) return;
-        GM.Player_Jump_Sound();
+        if (!context.performed || !groundedPlayer || isJumping == true ) return;
+        gameManager.Player_Jump_Sound();
         animCon.SetBool("JumpAnim", true);
         animCon.SetBool("Landing", true);
-        playerVelocity += jumpForse;
-        isJumpping = true;
+        playerVelocity += jumpForce;
+        isJumping = true;
     }
 
     private bool CheckGrounded()
@@ -111,16 +114,16 @@ public class Player_Rest_Controller : MonoBehaviour
     }
     IEnumerator Starting()
     {
-        yield return new WaitForSeconds(cool);
+        yield return new WaitForSeconds(coolTime);
         starting = false;
     }
 
     void Awake()
     {
-        plaIn = GetComponent<PlayerInput>();
+        playerInput = GetComponent<PlayerInput>();
         charaCon = GetComponent<CharacterController>();
         animCon = GetComponent<Animator>();
-        GM = FindGM.GetComponent<GameManager>();
+        gameManager = findGM.GetComponent<GameManager>();
         cameraAxis.GetComponent<CinemachineInputAxisController>();
 
     }
@@ -212,7 +215,7 @@ public class Player_Rest_Controller : MonoBehaviour
 
     public void Landing()//着地アニメーションイベントで制御
     {
-        isJumpping = false;
+        isJumping = false;
        
         animCon.SetBool("Landing", false);
     }
@@ -233,6 +236,6 @@ public class Player_Rest_Controller : MonoBehaviour
 
     public void LandingSound()
     {
-        GM.Player_Landing_Sound();
+        gameManager.Player_Landing_Sound();
     }
 }

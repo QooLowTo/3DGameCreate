@@ -13,33 +13,33 @@ public class GameOverManager : MonoBehaviour
     private PlayableDirector gameOverPlayable;
 
     [SerializeField]
-    private FlagmentData flagmentData;
+    private FlagManagementData flagManagementData; // フラグ管理データ
 
     [SerializeField]
-    private GameObject post;
+    private GameObject post; //これ何用？
 
     [SerializeField]
     private CinemachineVirtualCameraBase lockOnCineVir;
+
     [SerializeField]
     private GameObject findLookCineVir;
 
     [SerializeField]
-    private GameObject mainEve;
+    private GameObject mainEvent;
     [SerializeField]
-    private GameObject gameOverEve;
+    private GameObject gameOverEvent;
 
     [SerializeField]
-    private GameManager GM;
+    private GameManager gameManager;
     [SerializeField]
     private GameObject findGM;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-        GM = findGM.GetComponent<GameManager>();
+        gameManager = findGM.GetComponent<GameManager>();
         lockOnCineVir = findLookCineVir.GetComponent<CinemachineVirtualCameraBase>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (lockOnCineVir.enabled)
@@ -48,33 +48,45 @@ public class GameOverManager : MonoBehaviour
         }
     }
 
+/// <summary>
+/// ゲームオーバー演出を再生します。
+/// </summary>
     public void GameOverPlayableStop()
     { 
         gameOverPlayable.Pause();
         post.SetActive(true);
         Time.timeScale = 0f;
-        mainEve.SetActive(false);
-        gameOverEve.SetActive(true);
+        mainEvent.SetActive(false);
+        gameOverEvent.SetActive(true);
     }
 
+/// <summary>
+/// ゲームオーバー演出を再生します。
+/// </summary>
     public void Continuation()
     {
         gameOverPlayable.Resume();
-        GM.LoadingStart_Sound();
+        gameManager.LoadingStart_Sound();
     
     }
 
+/// <summary>
+/// ゲームオーバー演出を再生します。
+/// </summary>
     public void BackCenter()
     {
         gameOverPlayable.Resume();
-        GM.LoadingStart_Sound();
-        flagmentData.SceneName = "HomeMap";
+        gameManager.LoadingStart_Sound();
+        flagManagementData.SceneName = "HomeMap";
     }
 
+/// <summary>
+/// ゲームオーバー演出を再生します。
+/// </summary>
     public void BackTitle()
     {
         gameOverPlayable.Resume();
-        GM.LoadingStart_Sound();
-        flagmentData.SceneName = "Title";
+        gameManager.LoadingStart_Sound();
+        flagManagementData.SceneName = "Title";
     }
 }

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// プレイヤーの経験値を管理するクラスです。
+/// </summary>
 public class Player_Experience_Manager : MonoBehaviour
 {
     private int exp = 0;
@@ -15,43 +18,41 @@ public class Player_Experience_Manager : MonoBehaviour
     private Collider myCol;
 
     [SerializeField] 
-    private Player_Status_Controller plasta;
+    private Player_Status_Controller playerSCon;
 
     [SerializeField]
-    private HealthBarScript plaHealth;
+    private HealthBarScript playerHealth;
     [SerializeField]
     private GameObject findHealth;
 
     [SerializeField]
-    private GameManager GM;
+    private GameManager gameManager;
     [SerializeField]
     private GameObject findGM;
 
     [SerializeField]
-    private StatusDate statusDate;
+    private StatusDate statusData;
 
     [SerializeField] 
     private ExpManager expManager;
 
     //int level = 1;
-
-    // Start is called before the first frame update
     void Start()
     {
-        plasta = gameObject.GetComponent<Player_Status_Controller>();
-        plaHealth = findHealth.GetComponent<HealthBarScript>();
-        GM = findGM.GetComponent<GameManager>();
-        statusDate = GetComponent<StatusDate>();
+        playerSCon = gameObject.GetComponent<Player_Status_Controller>();
+        playerHealth = findHealth.GetComponent<HealthBarScript>();
+        gameManager = findGM.GetComponent<GameManager>();
+        statusData = GetComponent<StatusDate>();
         expManager = GetComponent<ExpManager>();
 
         //elementNum = statusDate.D_ExpListElement;
     }
 
-    // Update is called once per frame
     void Update()
     {
       
-        if (plasta.PlayerExp >= expManager.ExpTablesList[statusDate.D_ExpListElement] && plasta.PlayerLevel != 99)
+      //以下の処理の説明を簡単に書いてください、（どういう場合に発生するかなど）
+        if (playerSCon.PlayerExp >= expManager.ExpTablesList[statusData.D_ExpListElement] && playerSCon.PlayerLevel != 99)
         {
             LevelUp();
         }
@@ -62,17 +63,20 @@ public class Player_Experience_Manager : MonoBehaviour
         //expManager.ExpTablesList.Add((int)needExpManage.Evaluate(level));
     }
 
+/// <summary>
+/// レベルアップ時の処理を行うメソッドです。
+/// </summary>
     public void LevelUp()
     {
-        plasta.PlayerLevel++;
-        plasta.PlayerHP += expManager.HpGrowthTableList[statusDate.D_ExpListElement];
-        plasta.PlayerAttackPower += expManager.AttackPGrowthTableList[statusDate.D_ExpListElement];
-        plasta.PlayerDefance += expManager.DefanceGrowthTableList1[statusDate.D_ExpListElement];
+        playerSCon.PlayerLevel++;
+        playerSCon.PlayerHP += expManager.HpGrowthTableList[statusData.D_ExpListElement];
+        playerSCon.PlayerAttackPower += expManager.AttackPGrowthTableList[statusData.D_ExpListElement];
+        playerSCon.PlayerDefance += expManager.DefanceGrowthTableList1[statusData.D_ExpListElement];
 
-        plasta.LivePlayerHP = plasta.PlayerHP;
-        plaHealth.SetMaxHealth(plasta.PlayerHP);
-        GM.Player_LevelUp_EffectAndSound(myCol,gameObject);
+        playerSCon.LivePlayerHP = playerSCon.PlayerHP;
+        playerHealth.SetMaxHealth(playerSCon.PlayerHP);
+        gameManager.Player_LevelUp_EffectAndSound(myCol,gameObject);
         
-        statusDate.D_ExpListElement++;
+        statusData.D_ExpListElement++;
     }
 }

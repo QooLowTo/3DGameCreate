@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+
 /// <summary>
 /// Fungusを用いたイベントを制御するクラスです。
 /// </summary>
@@ -16,7 +17,7 @@ public class FungusScene_Controller : MonoBehaviour
     [SerializeField]
     private GameObject decisionCsr;
 
-    private GameObject PlaOb;
+    private GameObject playerObj;
 
     [SerializeField]
     private PlayableDirector playable;
@@ -25,89 +26,92 @@ public class FungusScene_Controller : MonoBehaviour
     private GameObject loadSceneObject; 
 
     [SerializeField]
-    private Player_Status_Controller plasta;
+    private Player_Status_Controller psc;
 
 
     [SerializeField] 
-    private PlayerInput plain;
+    private PlayerInput playerInput;
 
     [SerializeField]
-    private Flowchart Flocha;
+    private Flowchart flowChart;
 
-    private GameObject FlochaOb;
-
-    [SerializeField]
-    private GameManager GM;
-
-    private GameObject FindGM;
+    private GameObject flowchartObj;
 
     [SerializeField]
-    private StatusDate statusData;
+    private GameManager gameManager;
+
+    private GameObject findGM; //同じ仕組みで複数のクラスでやるなら、同じ名前に統一しましょう
 
     [SerializeField]
-    private FlagmentData flagmentData;
+    private StatusData statusData;
+
+    [SerializeField]
+    private FlagManagementData flagManagementData;
 
     [SerializeField] 
-    private string LoadSceneName;
+    private string loadSceneName;
 
     [SerializeField]
     private string fungusSendMessage;
 
-    bool iventing = false;
+    bool isEventActive = false;
 
-    bool decision = false;
+    bool isDecisionMade = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        PlaOb = GameObject.FindWithTag("Player");
-        FlochaOb = GameObject.FindWithTag("Fungus");
-        FindGM = GameObject.FindWithTag("GameManager");
+        playerObj = GameObject.FindWithTag("Player");
+        flowchartObj = GameObject.FindWithTag("Fungus");
+        findGM = GameObject.FindWithTag("GameManager");
       
-        plasta = PlaOb.GetComponent<Player_Status_Controller>();
-        plain = PlaOb.GetComponent<PlayerInput>();
-        Flocha = FlochaOb.GetComponent<Flowchart>();
-        GM = FindGM.GetComponent<GameManager>();
+        psc = playerObj.GetComponent<Player_Status_Controller>();
+        playerInput = playerObj.GetComponent<PlayerInput>();
+        flowChart = flowchartObj.GetComponent<Flowchart>();
+        gameManager = findGM.GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (plain.actions["Decision"].triggered)
+        if (playerInput.actions["Decision"].triggered)
         {
-            decision = true;
+            isDecisionMade = true;
 
         }
 
-        if (decision == false) return;
+        if (isDecisionMade == false) return;
 
-        if (decision)
+        if (isDecisionMade)
         {
             Invoke("DecisionFalse", 0.1f);
         }
     }
 
+/// <summary>
+/// プレイヤーがイベントを選択したかどうかを判定するメソッド
+/// </summary>
     private void DecisionFalse()
     {
-        decision = false;
+        isDecisionMade = false;
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (iventing == false)
+        if (isEventActive == false)
         {
             decisionCsr.SetActive(true);
         }
 
 
-        if (other.gameObject.tag == "Player" && iventing == false && decision)
+        if (other.gameObject.tag == "Player" && isEventActive == false && isDecisionMade)
         {
 
-            ChageAction();
+            ChangeAction();
 
             decisionCsr.SetActive(false);
 
-            iventing = true;
+            isEventActive = true;
 
         }
 
@@ -137,33 +141,50 @@ public class FungusScene_Controller : MonoBehaviour
         }
     }
 
-    public void ChageAction()
+/// <summary>
+/// プレイヤーのアクションを変更するメソッド
+/// </summary>
+    public void ChangeAction()
     {
-        plain.SwitchCurrentActionMap("UI");
-        Flocha.SendFungusMessage(fungusSendMessage);
+        playerInput.SwitchCurrentActionMap("UI");
+        flowChart.SendFungusMessage(fungusSendMessage);
     }
 
-    public void OnFinishedIvent()
+/// <summary>
+/// イベントが終了した際にプレイヤーのアクションを変更するメソッド
+/// </summary>
+    public void OnFinishedEvent()
     {
-        plain.SwitchCurrentActionMap("Player");
-        iventing = false;
+        playerInput.SwitchCurrentActionMap("Player");
+        isEventActive = false;
     }
 
+/// <summary>
+/// 説明書きましょう
+/// </summary>
     public void LoadingStart()
     {
-       flagmentData.SceneName = LoadSceneName;
-        UpdateStatas();
-        GM.MusicManager.GetComponent<AudioSource>().Stop();
-        GM.LoadingStart_Sound();
+       flagManagementData.SceneName = loadSceneName;
+        UpdateStatus();
+        gameManager.MusicManager.GetComponent<AudioSource>().Stop();
+        gameManager.LoadingStart_Sound();
         loadSceneObject.SetActive(true);
         playable.Play();
     }
 
+/// <summary>
+///  説明書きましょう
+/// </summary>
     public void Loading()
     { 
      StartCoroutine(LoadSceneAsync("LoadingScene"));
     }
 
+/// <summary>
+/// 説明書きましょう
+/// </summary>
+/// <param name="sceneName"></param>
+/// <returns></returns>
     IEnumerator LoadSceneAsync(string sceneName)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
@@ -174,14 +195,17 @@ public class FungusScene_Controller : MonoBehaviour
         }
     }
 
-    private void UpdateStatas()
+/// <summary>
+/// ステータスデータを更新するメソッド
+/// </summary>
+    private void UpdateStatus()
     { 
-       statusData.D_PlayerLevel = plasta.PlayerLevel;
-       statusData.D_PlayerExp = plasta.PlayerExp;
-       statusData.D_PlayerHP = plasta.PlayerHP;
-       statusData.D_LivePlayerHP = plasta.LivePlayerHP;
-       statusData.D_PlayerAttackPower = plasta.PlayerAttackPower;
-       statusData.D_PlayerDefance = plasta.PlayerDefance;
+       statusData.D_PlayerLevel = psc.PlayerLevel;
+       statusData.D_PlayerExp = psc.PlayerExp;
+       statusData.D_PlayerHP = psc.PlayerHP;
+       statusData.D_LivePlayerHP = psc.LivePlayerHP;
+       statusData.D_PlayerAttackPower = psc.PlayerAttackPower;
+       statusData.D_PlayerDefance = psc.PlayerDefance;
       
     }
 }

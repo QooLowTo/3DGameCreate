@@ -9,13 +9,13 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// タイトルシーンでのイベントを制御するクラスです。
 /// </summary>
-public class TitleIvent : MonoBehaviour
+public class TitleEvent : MonoBehaviour
 {
     [SerializeField]
     private List<PlayableDirector> titlePlayables = new List<PlayableDirector>();
 
     [SerializeField]
-    private PlayerInput plain;//インプットシステム
+    private PlayerInput playerInput;//インプットシステム
 
     [SerializeField]
     private EventSystem eve;
@@ -24,10 +24,10 @@ public class TitleIvent : MonoBehaviour
     private GameObject loadSceneObject;
 
     [SerializeField]
-    private GameObject biginCancelButton;
+    private GameObject biginCancelButton; //何用？説明してください
 
     [SerializeField]
-    private GameObject biggingButton;
+    private GameObject biggingButton;　//何用？説明してください
 
     //[SerializeField] 
     //private GameObject titleButtons;
@@ -39,76 +39,94 @@ public class TitleIvent : MonoBehaviour
     private GameObject subEveSys;
 
     [SerializeField]
-    private GameManager GM;
+    private GameManager gameManager;
 
     [SerializeField]
     private GameObject findGame;
 
     [SerializeField]
-    private FlagmentData gameData;
+    private FlagManagementData
+     gameData;
 
     [SerializeField]
     private string loadSceneName;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        plain = GetComponent<PlayerInput>();
+        playerInput = GetComponent<PlayerInput>();
 
-        GM = findGame.GetComponent<GameManager>();
+        gameManager = findGame.GetComponent<GameManager>();
 
         eve = EventSystem.current;
     }
 
-    // Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
-
-    public void Begging()
+    /// <summary>
+    /// イベントを開始します。
+    /// </summary>
+    public void Begging() //Beggingだとスペルミスしているので、Begging→Beginに変更してください
     {
-        GM.Decision_Sound();
+        gameManager.Decision_Sound();
         mainEveSys.SetActive(false);
         titlePlayables[0].Play();
     }
 
-    public void BeggingPause()
+    /// <summary>
+    /// イベントを一時停止します。
+    /// </summary>
+    public void BeggingPause() //BeginPauseにした方がいい。それか、BeginningPause
     {
         subEveSys.SetActive(true);
         //titleButtons.SetActive(false);
         titlePlayables[0].Pause(); 
     }
 
-    public void BeggingResum()
+    /// <summary>
+    /// イベントを再開します。
+    /// </summary>
+    public void BeggingResum() //BeginResumeもしくはBeginningResume
     {
-        GM.Cancel_Sound();
+        gameManager.Cancel_Sound();
         //titleButtons.SetActive(true);
     
         titlePlayables[0].Resume();
     }
 
+    /// <summary>
+    /// イベントをアクティブにします。
+    /// </summary>
     public void EventActive()
     { 
-    eve.firstSelectedGameObject = biggingButton;
+        eve.firstSelectedGameObject = biggingButton;
         subEveSys.SetActive(false);
         mainEveSys.SetActive(true);
     }
 
+    /// <summary>
+    /// ゲームを開始します。
+    /// </summary>
     public void Begin()
     {
         gameData.SceneName = loadSceneName;
-        GM.MusicManager.GetComponent<AudioSource>().Stop();
-        GM.LoadingStart_Sound();
+        gameManager.MusicManager.GetComponent<AudioSource>().Stop();
+        gameManager.LoadingStart_Sound();
         loadSceneObject.SetActive(true);
         titlePlayables[1].Play();
     }
 
-    public void Loding()
+
+        /// <summary>
+        /// シーンをロードします。
+        /// </summary>
+    public void Loading()
     {
         StartCoroutine(LoadSceneAsync("LoadingScene"));
     }
 
+    /// <summary>
+    /// シーンを非同期でロードします。
+    /// </summary>
+    /// <param name="sceneName"></param>
+    /// <returns></returns>
     IEnumerator LoadSceneAsync(string sceneName)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);

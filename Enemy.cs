@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour
 
 
     [SerializeField]
-    private Player_Status_Controller plasta;
+    private Player_Status_Controller psc;  //plasta　>> この変数の名前おかしいよ。　せめて psc とかにしよう。
   
     [SerializeField] 
     private NavMeshAgent myAgent;
@@ -104,7 +104,7 @@ public class Enemy : MonoBehaviour
         target = GameObject.FindWithTag("Player");
 
         GM = FindGameManager.GetComponent<GameManager>();
-        plasta = target.GetComponent<Player_Status_Controller>();
+        psc = target.GetComponent<Player_Status_Controller>();
         myAgent = GetComponent<NavMeshAgent>();
         animCon = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -118,6 +118,9 @@ public class Enemy : MonoBehaviour
     void Update()
     { 
         if (enemyDie) return;
+
+
+        //ここは簡単にどういう処理しているか説明書きましょう
 
         myAgent.SetDestination(target.transform.position);
 
@@ -206,6 +209,10 @@ public class Enemy : MonoBehaviour
        
     }
 
+/// <summary>
+/// プレイヤーの攻撃が当たった時の処理
+/// </summary>
+/// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "PlayerWeapon"&&hitting == false)
@@ -215,19 +222,28 @@ public class Enemy : MonoBehaviour
         
     }
 
+/// <summary>
+/// 処理の説明を書きましょう
+/// </summary>
     public void OnEnemyAttack()
     { 
         AttackCollider.enabled = true;
     }
 
+/// <summary>
+/// 処理の説明を書きましょう
+/// </summary>
     public void OffEnemyAttack()
     {
         AttackCollider.enabled = false;
     }
 
+/// <summary>
+/// 処理の説明を書きましょう
+/// </summary>
     public void OnEnemyHit()
     {
-            enemyDamage = GM.DamegeCalculation(enemyDefence,plasta.PlayerAttackPower);//ダメージの計算結果をダメージ変数に代入。
+            enemyDamage = GM.DamegeCalculation(enemyDefence,psc.PlayerAttackPower);//ダメージの計算結果をダメージ変数に代入。
 
             enemyHp -= enemyDamage;//HP - ダメージ
 
@@ -245,6 +261,9 @@ public class Enemy : MonoBehaviour
            
     }
 
+/// <summary>
+/// 処理の説明を書きましょう
+/// </summary>
     private void EnemyBreak()
     {
         if (enemyHitBarrierShield > 0)//シールドを持っていれば
@@ -273,17 +292,23 @@ public class Enemy : MonoBehaviour
         }   
     }
 
+/// <summary>
+/// 処理の説明を書きましょう
+/// </summary>
     private void EnemyOnDie()
     {
         myAgent.isStopped = true; 
         GM.GetExpText(enemyThisCollider,getExp);
-        plasta.PlayerExp += getExp;
+        psc.PlayerExp += getExp;
         OffCollider(); 
         animCon.SetBool("Die",true);
         StartCoroutine(EnemyDieEffectAndDestroy());
         enemyDie = true;        
     }
 
+/// <summary>
+/// 処理の説明を書きましょう
+/// </summary>
     IEnumerator EnemyDieEffectAndDestroy()
     {
         yield return new WaitForSeconds(2.5f);
@@ -291,6 +316,9 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject,0.1f);
     }
 
+/// <summary>
+/// 処理の説明を書きましょう
+/// </summary>
     private void OffCollider()
     {
         enemyThisCollider.enabled = false;
@@ -298,23 +326,34 @@ public class Enemy : MonoBehaviour
         AttackCollider.enabled = false;
     }
 
+/// <summary>
+/// 処理の説明を書きましょう
+/// </summary>
     void HittingFalse()
     { 
-    hitting = false;
+        hitting = false;
     }
     
-    void kinematicTrue()
+/// <summary>
+/// 処理の説明を書きましょう
+/// </summary>
+    void KinematicTrue()
     {
         rb.isKinematic = true;
     }
 
-
+/// <summary>
+/// 処理の説明を書きましょう
+/// </summary>
     private void EnemyKnockBack()
     {
         Vector3 vec = transform.forward * forwardForce;
         rb.AddForce(vec, ForceMode.Impulse);
     }
 
+/// <summary>
+/// 処理の説明を書きましょう
+/// </summary>
     private void StopCoolSet(float SetCool)
     {
 

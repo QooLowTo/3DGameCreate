@@ -19,7 +19,6 @@ public class PopUI : MonoBehaviour
     [SerializeField]
     private float moveSpeed = 0.4f;//移動値
 
-    // Start is called before the first frame update
     void Start()
     {    
 
@@ -27,7 +26,9 @@ public class PopUI : MonoBehaviour
     
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// ダメージテキストをフェードアウトさせる処理です。
+    /// </summary>
     void LateUpdate()
     {
         transform.rotation = Camera.main.transform.rotation;

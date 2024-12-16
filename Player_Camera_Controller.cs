@@ -5,15 +5,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// プレイヤーのカメラを制御するクラスです。
+/// </summary>
 public class Player_Camera_Controller : MonoBehaviour
 {
 
     [SerializeField]
-    private LookOn lookOn;
+    private LookOn lockOn; //ロックオンの間違いですよね？もしそうなら修正お願いします
     [SerializeField]
-    private Collider lookOnCollider;
+    private Collider lockOnCollider;
     [SerializeField]
-    private GameObject findLookOn;
+    private GameObject findLockOn;
 
     private float distanceToTarget;
 
@@ -21,7 +24,7 @@ public class Player_Camera_Controller : MonoBehaviour
 
     bool getTarget = false;
 
-    bool lockTaget = false;
+    bool lockTarget = false;
 
     [SerializeField]
     bool lockOut = false;
@@ -29,55 +32,54 @@ public class Player_Camera_Controller : MonoBehaviour
     public GameObject Target { get => target; set => target = value; }
     public bool GetTarget { get => getTarget; set => getTarget = value; }
 
-    // Start is called before the first frame update
     void Start()
     {
 
-        lookOn = findLookOn.GetComponent<LookOn>();
-        lookOnCollider = findLookOn.GetComponent<Collider>();
+        lockOn = findLockOn.GetComponent<LookOn>();
+        lockOnCollider = findLockOn.GetComponent<Collider>();
       
     }
-
-    // Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
-
    
 
     public void LockOn(InputAction.CallbackContext context)
     {
         
-        if (lookOnCollider.enabled == false && getTarget == false && lockTaget == false && lockOut == false)
+        if (lockOnCollider.enabled == false && getTarget == false && lockTarget == false && lockOut == false)
         { 
-            lookOnCollider.enabled = true;
-            lockTaget = true;
-            Invoke("ColliderFalse", 0.5f);
+            lockOnCollider.enabled = true;
+            lockTarget = true;
+            Invoke("ColliderFalse", 0.5f); //マジックナンバー発見！変数化　OR　定数化　OR　コメント残してしてください
            
         }
-        else if (lookOn.LockOnCineVir.enabled && getTarget && lockTaget == false && lockOut == false)
+        else if (lockOn.LockOnCineVir.enabled && getTarget && lockTarget == false && lockOut == false)
         {
-            lookOnCollider.enabled = false;
+            lockOnCollider.enabled = false;
 
-            lookOn.TargetTramsform.Clear();
+            lockOn.TargetTramsform.Clear(); //つづり間違っている。Transformが正しい
 
-            lookOn.LockOnCineVir.enabled = false;
+            lockOn.LockOnCineVir.enabled = false;
 
             getTarget = false;
 
             lockOut = true;
 
-            Invoke("LockOutFalse",0.5f);
+            Invoke("LockOutFalse",0.5f); //マジックナンバー発見！変数化　OR　定数化　OR　コメント残してしてください
         }
     }
 
+    /// <summary>
+    /// 説明書いてください。メソッド名だけではわからない。もうちょっと分かりやすい名前にしてください。
+    /// 例えば「DeactivateCollider」など
+    /// </summary>
     private void ColliderFalse()
     {
-        lookOnCollider.enabled = false;
-        lockTaget = false;
+        lockOnCollider.enabled = false;
+        lockTarget = false;
     }
 
+    /// <summary>
+    /// 説明書いてください。メソッド名だけではわからない。もうちょっと分かりやすい名前にしてください。
+    /// </summary>
     private void LockOutFalse()
     {
         lockOut = false;

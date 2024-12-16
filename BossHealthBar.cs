@@ -8,10 +8,10 @@ using System.Collections.Generic;
 /// <summary>
 /// ボスのHPバーを制御するクラスです
 /// </summary>
-public class BossHeathBar_1 : MonoBehaviour
+public class BossHealthBar : MonoBehaviour
 {
     [SerializeField]
-    private Boss_1 boss_1;
+    private Boss_1 boss_1; //こういう名前はよくない、１って何？となるからもっと具体的なボスの特徴を入れるべき
 
     [SerializeField]
     Slider slider;
@@ -43,6 +43,9 @@ public class BossHeathBar_1 : MonoBehaviour
 
     }
 
+/// <summary>
+/// ボスのHPが0になった時にHPバーを非表示にするメソッド
+/// </summary>
     public void HealthDeath()
     {
         fill.enabled = false;

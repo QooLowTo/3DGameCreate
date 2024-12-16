@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// プレイヤーのステータスを管理するクラスです。
+/// </summary>
 public class Player_Status_Controller : MonoBehaviour
 {
     [SerializeField]
@@ -17,15 +20,15 @@ public class Player_Status_Controller : MonoBehaviour
     [SerializeField] 
     private int playerAttackPower = 3;
     [SerializeField]
-    private int playerDefance = 1;
+    private int playerDefence = 1;
 
     [SerializeField]
-    private HealthBarScript plaHealth;
+    private HealthBarScript playerHealth;
     [SerializeField]
     private GameObject healthBar;
 
     [SerializeField] 
-    private StatusDate StatusDate;
+    private StatusDate statusData;
 
 
     //---プロパティ---//
@@ -33,45 +36,41 @@ public class Player_Status_Controller : MonoBehaviour
     public int PlayerExp { get => playerExp; set => playerExp = value; }
     public int PlayerHP { get => playerHP; set => playerHP = value; }
     public int PlayerAttackPower { get => playerAttackPower; set => playerAttackPower = value; }
-    public int PlayerDefance { get => playerDefance; set => playerDefance = value; }
+    public int PlayerDefence { get => playerDefence; set => playerDefence = value; }
     public int LivePlayerHP { get => livePlayerHP; set => livePlayerHP = value; }
     public GameObject HealthBar { get => healthBar; set => healthBar = value; }
   
-
-
-    // Start is called before the first frame update
     void Start()
     {
         //if (playerLevel == StatusDate.D_PlayerLevel) return;
 
-        playerLevel = StatusDate.D_PlayerLevel;
+        playerLevel = statusData.D_PlayerLevel;
 
-        playerExp = StatusDate.D_PlayerExp;
+        playerExp = statusData.D_PlayerExp;
 
-        playerHP = StatusDate.D_PlayerHP;
+        playerHP = statusData.D_PlayerHP;
 
-        playerAttackPower = StatusDate.D_PlayerAttackPower;
+        playerAttackPower = statusData.D_PlayerAttackPower;
 
-        playerDefance = StatusDate.D_PlayerDefance;
+        playerDefence = statusData.D_PlayerDefance;
 
-        livePlayerHP = StatusDate.D_LivePlayerHP;
+        livePlayerHP = statusData.D_LivePlayerHP;
 
-        plaHealth = healthBar.GetComponent<HealthBarScript>();
+        playerHealth = healthBar.GetComponent<HealthBarScript>();
 
-       plaHealth.SetMaxHealth(PlayerHP);
+       playerHealth.SetMaxHealth(PlayerHP);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (plaHealth != null)
+        if (playerHealth != null)
         { 
-        plaHealth.SetHealth(livePlayerHP);
+             playerHealth.SetHealth(livePlayerHP);
         }
         
         if (livePlayerHP < 0)
         {
-            plaHealth.HealthDeath();
+            playerHealth.HealthDeath();
             livePlayerHP = 0;     
         }
     }
