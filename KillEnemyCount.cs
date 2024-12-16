@@ -1,24 +1,25 @@
 using UnityEngine;
 
+/// <summary>
+/// 敵を倒した数をカウントするクラスです。
+/// </summary>
 public class KillEnemyCount : MonoBehaviour
 {
    
     private Enemy myEnemy;
 
     [SerializeField]
-    private FlagmentData gameDate;
+    private FlagManagementData flagManagementData;
 
-  
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+      void Start()
     {
         myEnemy = GetComponent<Enemy>();
     }
 
-    // Update is called once per frame
     void Update()
     { 
+
+        //簡単な処理の説明を書いて
         if (myEnemy.EnemyDie) return;
 
         if (myEnemy.EnemyHp <= 0)
@@ -27,9 +28,12 @@ public class KillEnemyCount : MonoBehaviour
         }
     }
 
+/// <summary>
+/// 敵を倒した数をカウントするメソッドです。
+/// </summary>
     private void KillCountPlus()
     {
-        gameDate.KillCount++;
+        flagManagementData.KillCount++;
       
     }
 }

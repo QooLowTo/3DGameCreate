@@ -16,9 +16,10 @@ public class SettingBarController : MonoBehaviour
     private SettingData settingData;
 
     [SerializeField]
-    private GameManager GM;
+    private GameManager gameManager;
+
     [SerializeField]
-    private GameObject findGameManager;
+    private GameObject findGM; //他のクラスだとこの表記なので、合わせました。
 
     [SerializeField]
     private List<Slider> settingSliderList = new List<Slider>();
@@ -33,10 +34,9 @@ public class SettingBarController : MonoBehaviour
 
     private int frameRateValue;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        GM = findGameManager.GetComponent<GameManager>();
+        gameManager = findGM.GetComponent<GameManager>();
      
 
         settingSliderList[0].value = settingData.BgmVolume * 10;
@@ -48,10 +48,10 @@ public class SettingBarController : MonoBehaviour
             settingSliderList[2].value = 0;
         }
 
+        //これらのマジックナンバーを定数にしてください
 
     }
 
-    // Update is called once per frame
  
     private void Update()
     {
@@ -64,11 +64,13 @@ public class SettingBarController : MonoBehaviour
             frameRateValue = 30;
         }
 
-        GM.GetComponent<AudioSource>().volume = soundValue;
+        gameManager.GetComponent<AudioSource>().volume = soundValue;
 
         sliderValues[0].text = (bgmValue * 10).ToString();
         sliderValues[1].text = (soundValue * 10).ToString();
         sliderValues[2].text = frameRateValue.ToString();
+
+        //マジックナンバーを定数にしてください
     }
 
     public void SaveSettingValue()
@@ -77,14 +79,15 @@ public class SettingBarController : MonoBehaviour
         settingData.SoundVolum = soundValue;
         settingData.FrameRate = frameRateValue;
 
-        nowBgmValue = GM.MusicManager.GetComponent<AudioSource>().volume;
+        nowBgmValue = gameManager.MusicManager.GetComponent<AudioSource>().volume;
 
         if (bgmValue != nowBgmValue)
         { 
-        GM.MusicManager.GetComponent<AudioSource>().volume = settingData.BgmVolume / 5;
+            gameManager.MusicManager.GetComponent<AudioSource>().volume = settingData.BgmVolume / 5;
+            //マジックナンバー発見！変数化　OR　定数化　OR　コメント残してください
         }
        
-        gameObject.GetComponent<AudioSource>().volume = settingData.SoundVolum;
+        gameObject.GetComponent<AudioSource>().volume = settingData.SoundVolume;
 
         Application.targetFrameRate = settingData.FrameRate;
     }

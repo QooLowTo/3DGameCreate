@@ -2,16 +2,18 @@ using DG.Tweening;
 using Fungus;
 using UnityEngine;
 using UnityEngine.Analytics;
-using UnityEngine.InputSystem;
-
+using UnityEngine.InputSyste
+/// <summary>
+/// チュートリアルのプレイヤーを制御するクラスです。
+/// </summary>
 public class Player_Tutorial_Controller : MonoBehaviour
 {
    
-    private Player_Battle_Controller placon;
+    private Player_Battle_Controller playerBCon;
 
-    private Player_Camera_Controller placam;
+    private Player_Camera_Controller playerCamCon;
 
-    private Player_UI_Controller placonUI;
+    private Player_UI_Controller playerUICon;
 
     [SerializeField]
     private GameObject hpUI;
@@ -24,25 +26,21 @@ public class Player_Tutorial_Controller : MonoBehaviour
     private bool stopAttack = true;
 
    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        placon = gameObject.GetComponent<Player_Battle_Controller>();
-        placam = gameObject.GetComponent<Player_Camera_Controller>();
-        placonUI = gameObject.GetComponent<Player_UI_Controller>();
-       
+        playerBCon = gameObject.GetComponent<Player_Battle_Controller>();
+        playerCamCon = gameObject.GetComponent<Player_Camera_Controller>();
+        playerUICon = gameObject.GetComponent<Player_UI_Controller>();
 
-        placon.MyWepon.SetActive(false);
+        playerBCon.MyWepon.SetActive(false); //武器の綴り MyWeaponです。修正してください。
 
-       
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (stopAttack)
         { 
-        placon.Rig.enabled = false;
+            playerBCon.Rig.enabled = false;
         }
 
         if (stopAttack == false)
@@ -53,8 +51,8 @@ public class Player_Tutorial_Controller : MonoBehaviour
 
     public void GameStart()//シグナルで制御
     {
-        placon.GameStarting = true;
-        placon.CameraAxis.enabled = true;
+        playerBCon.GameStarting = true;
+        playerBCon.CameraAxis.enabled = true;
        
     }
 
@@ -62,23 +60,23 @@ public class Player_Tutorial_Controller : MonoBehaviour
     {
         if (stopAttack) return;
 
-        if (placon.Attacking == false && placon.Hitting == false && placon.IsDown == false && placon.Avoidancing == false && placon.GroundedPlayer)
+        if (playerBCon.Attacking == false && playerBCon.Hitting == false && playerBCon.IsDown == false && playerBCon.Avoidancing == false && playerBCon.GroundedPlayer)
         {
-            placon.Attacking = true;
+            playerBCon.Attacking = true;
 
-            placon.AttackingLook = true;
+            playerBCon.AttackingLook = true;
 
-            placon.AnimCon.SetBool("Attacking", true);//AnySatateの制御用
+            playerBCon.AnimCon.SetBool("Attacking", true);//AnySatateの制御用
         }
 
-        if (placon.StopCombo == false && placon.Hitting == false && placon.IsDown == false && placon.Avoidancing == false && placon.GroundedPlayer)
+        if (playerBCon.StopCombo == false && playerBCon.Hitting == false && playerBCon.IsDown == false && playerBCon.Avoidancing == false && playerBCon.GroundedPlayer)
         {
-            placon.AttackCombo++;
-            placon.StopCombo = true;
+            playerBCon.AttackCombo++;
+            playerBCon.StopCombo = true;
 
-            if (placon.AttackCombo <= 1)
+            if (playerBCon.AttackCombo <= 1)
             {
-                placon.AnimCon.SetTrigger("Attack");
+                playerBCon.AnimCon.SetTrigger("Attack");
             }
         }
 
@@ -88,63 +86,63 @@ public class Player_Tutorial_Controller : MonoBehaviour
     {
         if (stopAttack) return;
 
-        if (placon.Avoidancing == false && placon.MoveInputAbs == 0 && placon.Hitting == false && placon.IsDown == false && placon.GroundedPlayer)
+        if (playerBCon.Avoidancing == false && playerBCon.MoveInputAbs == 0 && playerBCon.Hitting == false && playerBCon.IsDown == false && playerBCon.GroundedPlayer)
         {
-            placon.AnimCon.SetBool("BackAvoidance", true);
+            playerBCon.AnimCon.SetBool("BackAvoidance", true);
 
-            placon.OffAttacking();
+            playerBCon.OffAttacking();
 
-            placon.GameManager.Player_Avoidance_Sound();
+            playerBCon.GameManager.Player_Avoidance_Sound();
 
-            placon.Avoidancing = true;
+            playerBCon.Avoidancing = true;
 
         }
 
-        else if (placon.Attacking == true && placon.MoveInput.x >= 0.1f && placon.Avoidancing == false && placon.Hitting == false && placon.IsDown == false && placon.GroundedPlayer)
+        else if (playerBCon.Attacking == true && playerBCon.MoveInput.x >= 0.1f && playerBCon.Avoidancing == false && playerBCon.Hitting == false && playerBCon.IsDown == false && playerBCon.GroundedPlayer)
         {
-            placon.AnimCon.SetBool("RightAvoidance", true);
+            playerBCon.AnimCon.SetBool("RightAvoidance", true);
 
-            placon.OffAttacking();
+            playerBCon.OffAttacking();
 
-            placon.GameManager.Player_Avoidance_Sound();
+            playerBCon.GameManager.Player_Avoidance_Sound();
 
-            placon.Avoidancing = true;
+            playerBCon.Avoidancing = true;
 
         }
-        else if (placon.Attacking == true && placon.MoveInput.x <= -0.1f && placon.Avoidancing == false && placon.Hitting == false && placon.IsDown == false && placon.GroundedPlayer)
+        else if (playerBCon.Attacking == true && playerBCon.MoveInput.x <= -0.1f && playerBCon.Avoidancing == false && playerBCon.Hitting == false && playerBCon.IsDown == false && playerBCon.GroundedPlayer)
         {
-            placon.AnimCon.SetBool("LeftAvoidance", true);
+            playerBCon.AnimCon.SetBool("LeftAvoidance", true);
 
-            placon.OffAttacking();
+            playerBCon.OffAttacking();
 
-            placon.GameManager.Player_Avoidance_Sound();
+            playerBCon.GameManager.Player_Avoidance_Sound();
 
-            placon.Avoidancing = true;
+            playerBCon.Avoidancing = true;
         }
-        else if (placon.Avoidancing == false && placon.MoveInputAbs >= 0.1f && placon.Hitting == false && placon.IsDown == false && placon.GroundedPlayer)
+        else if (playerBCon.Avoidancing == false && playerBCon.MoveInputAbs >= 0.1f && playerBCon.Hitting == false && playerBCon.IsDown == false && playerBCon.GroundedPlayer)
         {
-            placon.AnimCon.SetBool("ForwardAvoidance", true);
+            playerBCon.AnimCon.SetBool("ForwardAvoidance", true);
 
-            placon.OffAttacking();
+            playerBCon.OffAttacking();
 
-            placon.GameManager.Player_Avoidance_Sound();
+            playerBCon.GameManager.Player_Avoidance_Sound();
 
-            placon.Avoidancing = true;
+            playerBCon.Avoidancing = true;
         }
     }
     public void WeaponGet()
     {
-        placon.MyWepon.SetActive(true);
+        playerBCon.MyWepon.SetActive(true); //Weaponの綴り修正してね
     }
 
     public void AttackOn()
     { 
         stopAttack = false;
-        placam.enabled = true;
-        placon.Rig.enabled = true;
+        playerCamCon.enabled = true;
+        playerBCon.Rig.enabled = true;
         lockon.SetActive(true);
         hpUI.SetActive(true);
-        placon.AnimCon.SetFloat("idleChange",animCount);//待機モーションチェンジ用
+        playerBCon.AnimCon.SetFloat("idleChange",animCount);//待機モーションチェンジ用
     }
 
 

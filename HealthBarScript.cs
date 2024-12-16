@@ -12,7 +12,7 @@ using UnityEngine.UI;
 public class HealthBarScript : MonoBehaviour
 {
     [SerializeField]
-    Player_Status_Controller plasta;
+    Player_Status_Controller playerSCon;  // プレイヤーのステータスコントローラー   
 
     [SerializeField]
     Slider slider;
@@ -21,7 +21,7 @@ public class HealthBarScript : MonoBehaviour
     TextMeshProUGUI hpText;
 
     [SerializeField]
-    TextMeshProUGUI lveText;
+    TextMeshProUGUI lveText; //??? 説明書いてください
 
     [SerializeField]
     Gradient gradient;
@@ -37,9 +37,9 @@ public class HealthBarScript : MonoBehaviour
     
         slider.value = health;
 
-        hpText.text = "<u>HP:" + plasta.PlayerHP + "/" + plasta.LivePlayerHP;
+        hpText.text = "<u>HP:" + playerSCon.PlayerHP + "/" + playerSCon.LivePlayerHP;
 
-        lveText.text = "<u><scale=0.8>Lv."+ "</scale>" + plasta.PlayerLevel;
+        lveText.text = "<u><scale=0.8>Lv."+ "</scale>" + playerSCon.PlayerLevel;
 
         hpText.color = gradient.Evaluate(slider.normalizedValue);
 
@@ -62,8 +62,11 @@ public class HealthBarScript : MonoBehaviour
         fill.color = gradient.Evaluate(1f);
     }
 
+/// <summary>
+/// プレイヤーのHPが0になった時にHPバーを非表示にするメソッド
+/// </summary>
     public void HealthDeath()
     { 
-    fill.enabled = false;
+        fill.enabled = false;
     }
 }

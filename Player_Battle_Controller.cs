@@ -17,8 +17,8 @@ using Unity.Cinemachine;
 public class Player_Battle_Controller : MonoBehaviour
 {
     [SerializeField] 
-    private float speed = 5f;//キャラクターのスピード
-    private float returnSpeed = 5f;
+    private float speed = 5f; //キャラクターのスピード
+    private float returnSpeed = 5f; //スピードの初期値
 
     [SerializeField] 
     private float jumpForse = 5f;//キャラクターのジャンプ力
@@ -36,61 +36,59 @@ public class Player_Battle_Controller : MonoBehaviour
     private float doAvoidancePower = 20f;//DoTweenの移動量
 
     [SerializeField] 
-    private float doTime = 0.5f;//DoTweenの移動時間
+    private float doTime = 0.5f; //DoTweenの移動時間
 
 
     [SerializeField]
-    private GameObject myWepon;//プレイヤーの武器
+    private GameObject myWeapon;//プレイヤーの武器
 
     [SerializeField]
-    private GameObject weponEffect;//トレイル
+    private GameObject weaponEffect;//トレイル
 
     [SerializeField] 
     private int attackCombo = 0;//攻撃回数
 
 
     [SerializeField] 
-    private Player_Status_Controller plasta;// プレイヤーのステータススクリプト
+    private Player_Status_Controller playerSCon;// プレイヤーのステータススクリプト
 
     [SerializeField]
-    private GameManager GM;
+    private GameManager gameManager;
 
     [SerializeField]
-    private GameObject FindGM;
+    private GameObject findGM;
 
     [SerializeField]
     private CinemachineInputAxisController cameraAxis;
 
 
-    private PlayerInput plaIn;//インプットシステム
+    private PlayerInput playerInput;//インプットシステム
     private CharacterController charaCon;//キャラクターコントローラー
     private Animator animCon;//アニメーター
     private RigBuilder rig;//リグビルダー(ダッシュアニメーション用)
     private InputAction DashInput;
-   
-
  
     private bool groundedPlayer = false;//地面にいるかどうか判定用
 
-    private bool isMove = false;//歩き中判定
+    private bool isMoving = false;//歩き中判定
 
-    private bool isDash = false;//ダッシュ中判定
+    private bool isDashing = false;//ダッシュ中判定
 
-    private bool isJumpping = false;//ジャンプ中判定
+    private bool isJumping = false;//ジャンプ中判定
 
-    private bool onJumpping = false;//二段ジャンプ中判定
+    private bool onJumping = false;//二段ジャンプ中判定
 
-    private bool attacking = false;//攻撃中判定
+    private bool isAttacking = false;//攻撃中判定
 
     private bool stopCombo = false;//コンボ封じ用
 
-    private bool attackingLook = false;//ロックオン中判定
+    private bool isAttackingWLockOn = false;//ロックオン中判定
 
-    private bool avoidancing = false;//回避中判定
+    private bool isAvoiding = false;//回避中判定
 
     private bool starting = true;//開幕ジャンプ中アニメ封じ用
 
-    private bool hitting = false;//ヒット中判定
+    private bool isHitting = false;//ヒット中判定
 
     private bool isDown = false;//ダウン中判定
 
@@ -109,7 +107,7 @@ public class Player_Battle_Controller : MonoBehaviour
     private float moveInputAbs;
 
     [SerializeField] 
-    private float playerVelocity;//縦方向のベクトル
+    private float playerVelocity; //縦方向のベクトル
 
     [SerializeField] 
     private float rayLength = 1f;
@@ -127,13 +125,13 @@ public class Player_Battle_Controller : MonoBehaviour
     public CharacterController CharaCon { get => charaCon; set => charaCon = value; } 
     public Animator AnimCon { get => animCon; set => animCon = value; }
     public RigBuilder Rig { get => rig; set => rig = value; }
-    public GameManager GameManager { get => GM; set => GM = value; }
+    public GameManager GameManager { get => gameManager; set => gameManager = value; }
     public float RotateSpeed { get => rotateSpeed; set => rotateSpeed = value; }
     public bool IsDown { get => isDown; set => isDown = value; }
-    public bool Avoidancing { get => avoidancing; set => avoidancing = value; }
-    public bool Hitting { get => hitting; set => hitting = value; }
-    public bool Attacking { get => attacking; set => attacking = value; }
-    public bool AttackingLook { get => attackingLook; set => attackingLook = value; }
+    public bool isAvoiding { get => isAvoiding; set => isAvoiding = value; }
+    public bool isHitting { get => isHitting; set => isHitting = value; }
+    public bool isAttacking { get => isAttacking; set => isAttacking = value; }
+    public bool IsAttackingWLockOn { get => isAttackingWLockOn; set => isAttackingWLockOn = value; }
     public bool GroundedPlayer { get => groundedPlayer; set => groundedPlayer = value; }
     public bool StopCombo { get => stopCombo; set => stopCombo = value; }
     public bool GameStarting { get => gameStart; set => gameStart = value; }
@@ -141,15 +139,11 @@ public class Player_Battle_Controller : MonoBehaviour
     public int AttackCombo { get => attackCombo; set => attackCombo = value; }
     public float MoveInputAbs { get => moveInputAbs; set => moveInputAbs = value; }
     public Vector2 MoveInput { get => moveInput; set => moveInput = value; }
-    public GameObject MyWepon { get => myWepon; set => myWepon = value; }
+    public GameObject MyWeapon { get => myWeapon; set => myWeapon = value; }
   
     public CinemachineInputAxisController CameraAxis { get => cameraAxis; set => cameraAxis = value; }
-    public PlayerInput PlaIn { get => plaIn; set => plaIn = value; }
+    public PlayerInput PlayerInput { get => playerInput; set => playerInput = value; }
     
-
-
-
-    // Start is called before the first frame update
 
     private void Start()
     {
@@ -163,15 +157,15 @@ public class Player_Battle_Controller : MonoBehaviour
     }
     void Awake()
     {
-        plasta = GetComponent<Player_Status_Controller>();
-        plaIn = GetComponent<PlayerInput>();
-        GM = FindGM.GetComponent<GameManager>();
+        playerSCon = GetComponent<Player_Status_Controller>();
+        playerInput = GetComponent<PlayerInput>();
+        gameManager = findGM.GetComponent<GameManager>();
         charaCon = GetComponent<CharacterController>();
         cameraAxis.GetComponent<CinemachineInputAxisController>();
         animCon = GetComponent<Animator>();
         rig = GetComponent<RigBuilder>();
 
-        DashInput = plaIn.actions["Dash"];
+        DashInput = playerInput.actions["Dash"];
     }
    
     private void FixedUpdate()
@@ -186,7 +180,7 @@ public class Player_Battle_Controller : MonoBehaviour
 
         moveInputAbs = moveInputAbs_x + moveInputAbs_y;
 
-        if (attacking == false && isDown == false && avoidancing == false && hitting == false)
+        if (isAttacking == false && isDown == false && isAvoiding == false && isHitting == false)
         {
          animCon.SetFloat("MoveInput", moveInputAbs);
         }
@@ -199,25 +193,25 @@ public class Player_Battle_Controller : MonoBehaviour
 
         animCon.SetInteger("AttackCombo",attackCombo);
 
-        if (avoidancing)
+        if (isAvoiding)
         {
-            if (myWepon.GetComponent<BoxCollider>().enabled == true)
+            if (myWeapon.GetComponent<BoxCollider>().enabled == true)
             {
                 OffCollider();
             }
 
-            if (weponEffect.GetComponent<TrailRenderer>().emitting == true)
+            if (weaponEffect.GetComponent<TrailRenderer>().emitting == true)
             {
                 OffEffect();
             }
         }
 
-        if (isDown == true||hitting == true)
+        if (isDown == true|| isHitting == true)
         {
             AllCancel();
         }
     }
-    // Update is called once per frame
+
     void Update()
     {
         if (gameOver || gameStart == false) return;
@@ -230,7 +224,7 @@ public class Player_Battle_Controller : MonoBehaviour
           
             var MoveDelta =  MoveVelocity * Time.deltaTime;
 
-        if (attacking == false && isDown == false && avoidancing == false && hitting == false)
+        if (isAttacking == false && isDown == false && isAvoiding == false && isHitting == false)
         {
                 ChangeDirection(MoveVelocity);
                 charaCon.Move(MoveDelta * speed);     
@@ -264,7 +258,7 @@ public class Player_Battle_Controller : MonoBehaviour
             OffDash();
         }
 
-        if ((moveInputAbs != 0) && groundedPlayer && attacking == false && isJumpping == false&& avoidancing == false && isDown == false)
+        if ((moveInputAbs != 0) && groundedPlayer && isAttacking == false && isJumping == false&& isAvoiding == false && isDown == false)
         {
             rig.enabled = true;
         }
@@ -274,13 +268,13 @@ public class Player_Battle_Controller : MonoBehaviour
         }
            
 
-        if (isJumpping == true&&onJumpping == true)//二段ジャンプ処理
+        if (isJumping == true&&onJumping == true)//二段ジャンプ処理
         {
             DoubleJump();
         }
         
 
-        if (!groundedPlayer&&hitting == false)
+        if (!groundedPlayer&&isHitting == false)
         {
             if (starting) return;
              playerVelocity += gravityValue * Time.deltaTime;
@@ -305,7 +299,7 @@ public class Player_Battle_Controller : MonoBehaviour
             }
         }
 
-        if (attacking == true || avoidancing == true)
+        if (isAttacking == true || isAvoiding == true)
         { 
             AttackingMoveLimit();
         }
@@ -319,14 +313,14 @@ public class Player_Battle_Controller : MonoBehaviour
         }
 
 
-            if (attacking == false)
+            if (isAttacking == false)
             {
            
             stopCombo = false;
      
             }
 
-        if (plasta.LivePlayerHP <= 0)
+        if (playerSCon.LivePlayerHP <= 0)
         {
             Die();
         }
@@ -341,47 +335,47 @@ public class Player_Battle_Controller : MonoBehaviour
 
     private void OnDash()
     {
-        if (isDash == false&&attacking == false && isDown == false && avoidancing == false && hitting == false&&groundedPlayer)
+        if (isDashing == false&&isAttacking == false && isDown == false && isAvoiding == false && isHitting == false&&groundedPlayer)
         {
                 animCon.SetBool("Dash", true);
 
-                GM.Player_DashStart_Sound();
+                gameManager.Player_DashStart_Sound();
 
                 DoForward(doDashFastSpeed);
 
-                speed += speed % 50f;
+                speed += speed % 50f; //マジックナンバー発見！変数化・定数化・コメント残してください
 
-                isDash = true;
+                isDashing = true;
             
         }
     }
     private void OffDash()
     {
-        if (isDash == false) return;
+        if (isDashing == false) return;
 
         animCon.SetBool("Dash", false);
         speed = returnSpeed;
-        isDash = false;
+        isDashing = false;
     }
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (!context.performed || !groundedPlayer || isJumpping == true || attacking == true || avoidancing == true || hitting == true || isDown == true) return; 
+        if (!context.performed || !groundedPlayer || isJumping == true || isAttacking == true || isAvoiding == true || isHitting == true || isDown == true) return; 
         animCon.SetBool("JumpAnim", true);
         animCon.SetBool("Landing", true);
         playerVelocity += jumpForse;
-        GM.Player_Jump_Sound();
-        isJumpping = true;
+        gameManager.Player_Jump_Sound();
+        isJumping = true;
     }
 
     public void DoubleJump()//二段ジャンプ処理
     {
-        if (plaIn.actions["Jump"].triggered&&!groundedPlayer)
+        if (playerInput.actions["Jump"].triggered&&!groundedPlayer)
         {
             animCon.SetBool("JumpAnim", false);
             animCon.SetBool("OnJump", true);
             playerVelocity += jumpForse;
-            GM.Player_DoubleJump_Sound();
-            onJumpping = false;
+            gameManager.Player_DoubleJump_Sound();
+            onJumping = false;
         }
     }
 
@@ -397,16 +391,16 @@ public class Player_Battle_Controller : MonoBehaviour
     {
         if (!context.performed) return;
  
-        if (attacking == false && hitting == false && isDown == false && avoidancing == false && groundedPlayer)
+        if (isAttacking == false && isHitting == false && isDown == false && isAvoiding == false && groundedPlayer)
         {
-            attacking = true;
+            isAttacking = true;
 
-            attackingLook = true;
+            isAttackingWLockOn = true;
 
             animCon.SetBool("Attacking", true);//AnySatateの制御用
         }
 
-        if (stopCombo == false && hitting == false && isDown == false && avoidancing == false && groundedPlayer)
+        if (stopCombo == false && isHitting == false && isDown == false && isAvoiding == false && groundedPlayer)
         {
             attackCombo++;
             stopCombo = true;
@@ -423,19 +417,19 @@ public class Player_Battle_Controller : MonoBehaviour
 
     public void Avoidance(InputAction.CallbackContext context)
     {
-        if (!context.performed || avoidancing || hitting || isDown || !groundedPlayer) return;
+        if (!context.performed || isAvoiding || isHitting || isDown || !groundedPlayer) return;
 
         if  (moveInputAbs == 0 )
         {
             animCon.SetBool("BackAvoidance", true);
 
         }
-        else if (attacking == true && moveInput.x >= 0.1f )
+        else if (isAttacking == true && moveInput.x >= 0.1f )
         {
             animCon.SetBool("RightAvoidance", true);
 
         }
-        else if (attacking == true && moveInput.x <= -0.1f )
+        else if (isAttacking == true && moveInput.x <= -0.1f )
         {
             animCon.SetBool("LeftAvoidance", true);
            
@@ -449,9 +443,9 @@ public class Player_Battle_Controller : MonoBehaviour
 
         OffAttacking(); 
         
-        GM.Player_Avoidance_Sound();
+        gameManager.Player_Avoidance_Sound();
 
-        avoidancing = true;
+        isAvoiding = true;
     }
 
     private bool CheckGrounded()
@@ -482,14 +476,14 @@ public class Player_Battle_Controller : MonoBehaviour
 
             case 1:
 
-                GM.Player_Move_Sound_1();
+                gameManager.Player_Move_Sound_1();
              
 
                 break;
 
             case 2:
 
-                GM.Player_Move_Sound_2();
+                gameManager.Player_Move_Sound_2();
                
 
                 break;
@@ -503,13 +497,13 @@ public class Player_Battle_Controller : MonoBehaviour
     //----------------------アタックアニメーションイベントで制御----------------------//
     public void OnCollider()
     {
-        myWepon.GetComponent<BoxCollider>().enabled = true;
-        weponEffect.GetComponent<TrailRenderer>().emitting = true;
-        GM.Player_Swing_Sound();
+        myWeapon.GetComponent<BoxCollider>().enabled = true;
+        weaponEffect.GetComponent<TrailRenderer>().emitting = true;
+        gameManager.Player_Swing_Sound();
     }
     public void OffCollider()
     {
-        myWepon.GetComponent<BoxCollider>().enabled = false; 
+        myWeapon.GetComponent<BoxCollider>().enabled = false; 
     }
 
     public void OffComboStop()
@@ -525,7 +519,7 @@ public class Player_Battle_Controller : MonoBehaviour
 
     public void OffAttackingLook()
     { 
-    attackingLook = false;
+    isAttackingWLockOn = false;
     }
 
     /// <summary>
@@ -533,7 +527,7 @@ public class Player_Battle_Controller : MonoBehaviour
     /// </summary>
     public void OffAttacking()
     { 
-        attacking = false;
+        isAttacking = false;
         animCon.SetBool("Attacking", false);
         animCon.ResetTrigger("NextAttack");
         attackCombo = 0;
@@ -547,7 +541,7 @@ public class Player_Battle_Controller : MonoBehaviour
 
     public void OffEffect()
     { 
-      weponEffect.GetComponent<TrailRenderer>().emitting = false;
+      weaponEffect.GetComponent<TrailRenderer>().emitting = false;
     }
 
     //--------------------------------------------------------------------------------//
@@ -566,7 +560,7 @@ public class Player_Battle_Controller : MonoBehaviour
     //----------------------ジャンプアニメーションイベントで制御----------------------//
     public void OnJumpTrue()//アニメーションイベントで制御
     { 
-    onJumpping = true;
+    onJumping = true;
     }
 
     public void isJumpFalse()//アニメーションイベントで制御
@@ -586,13 +580,13 @@ public class Player_Battle_Controller : MonoBehaviour
 
     public void LandingSound()
     { 
-     GM.Player_Landing_Sound();
+     gameManager.Player_Landing_Sound();
     }
     public void Landing()
     {
        
-        isJumpping = false;
-        onJumpping = false;
+        isJumping = false;
+        onJumping = false;
         animCon.SetBool("Landing", false);
     }
 
@@ -624,29 +618,29 @@ public class Player_Battle_Controller : MonoBehaviour
     public void CancelAvoidance(string AnimName)
     {
         animCon.SetBool(AnimName, false);
-        avoidancing = false;
+        isAvoiding = false;
     }
 
     public void OnHit()
     { 
-        hitting = true;
+        isHitting = true;
 
     }
     public void OffHit()//アニメーションイベントで制御
     { 
-    hitting = false;
+        isHitting = false;
 
         if (groundedPlayer)
         {
             Landing();
         }
     }
-    public void OnisDown()//アニメーションイベントで制御
+    public void OnIsDown()//アニメーションイベントで制御
     {
         isDown = true;
 
     }
-    public void OffisDown()//アニメーションイベントで制御
+    public void OffIsDown()//アニメーションイベントで制御
     {
         isDown = false;
         AnimCon.SetBool("knockbacking", false);
@@ -666,9 +660,9 @@ public class Player_Battle_Controller : MonoBehaviour
 
         animCon.SetBool("Falling", false);
 
-        isDash = false;
-        isJumpping = false;
-        onJumpping = false;
+        isDashing = false;
+        isJumping = false;
+        onJumping = false;
 
         CancelAvoidance("BackAvoidance");
         CancelAvoidance("RightAvoidance");
@@ -679,7 +673,7 @@ public class Player_Battle_Controller : MonoBehaviour
     public void GameStart()//シグナルで制御
     { 
     gameStart = true;
-    plasta.HealthBar.SetActive(true);
+    playerSCon.HealthBar.SetActive(true);
         cameraAxis.enabled = true;
     }
 
@@ -689,7 +683,7 @@ public class Player_Battle_Controller : MonoBehaviour
         rig.enabled = false;
         animCon.SetTrigger("Die");
         charaCon.enabled = false;
-        GM.GameOver();
+        gameManager.GameOver();
         gameOver = true;
     }
 

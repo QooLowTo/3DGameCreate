@@ -1,8 +1,11 @@
 using UnityEngine;
 
+/// <summary>
+/// フラグ管理を行うスクリプタブルオブジェクトです。
+/// </summary>
 //エディターから右クリックで作成できるようにするため
 [CreateAssetMenu(menuName = "フラグ管理/フラグ管理オブジェクト")]
-public class FlagmentData : ScriptableObject
+public class FlagManagementData : ScriptableObject
 {
     [SerializeField]
     private int killCount = 0;

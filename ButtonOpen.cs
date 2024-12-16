@@ -13,58 +13,55 @@ using UnityEngine.Playables;
 public class ButtonOpen : MonoBehaviour
 {
     [SerializeField]
-    private List<PlayableDirector> buttonPlayables = new List<PlayableDirector>();
+    private List<PlayableDirector> buttonPlayables = new List<PlayableDirector>(); //説明書きましょう
 
     [SerializeField]
-    private List<GameObject> selsectButton = new List<GameObject>();
+    private List<GameObject> selsectButton = new List<GameObject>();//説明書きましょう
 
     [SerializeField]
-    private List<GameObject> selsectBackButton = new List<GameObject>();
+    private List<GameObject> selsectBackButton = new List<GameObject>();//説明書きましょう
 
     [SerializeField]
-    private List<ButtonController> buttonConList = new List<ButtonController>();
+    private List<ButtonController> buttonConList = new List<ButtonController>();//説明書きましょう
 
     [SerializeField]
-    private GameObject mainEveSys;
+    private GameObject mainEveSys;//説明書きましょう
 
     [SerializeField]
-    private GameObject subEveSys;
+    private GameObject subEveSys;//説明書きましょう
 
     [SerializeField]
-    private GameManager GM;
+    private GameManager GM; //ゲームマネージャー
+    
     [SerializeField]
-    private GameObject FindGM;
+    private GameObject FindGM;//ゲームマネージャーを探す用
 
-    ButtonController buttonController;
-    private GameObject findButtonCntr;
+    ButtonController buttonController; //説明書きましょう
+    private GameObject findButtonCntr; //説明書きましょう
 
 
-    private bool openNow = false;
+    private bool openNow = false; //説明書きましょう
 
-    private bool cancelOK = false;//UIコントローラーで使う
+
+    private bool cancelOK = false; //UIコントローラーで使う //説明書きましょう
 
     [SerializeField]
-    private string selectButtonName;
+    private string selectButtonName; //説明書きましょう
 
     public bool OpenNow { get => openNow; set => openNow = value; }
     public bool CancelOK { get => cancelOK; set => cancelOK = value; }
     public string SelectButtonName { get => selectButtonName; set => selectButtonName = value; }
 
-    // Start is called before the first frame update
     void Start()
     {
         //findButtonCntr = GameObject.FindWithTag("SelectButton");
 
         //buttonController = findButtonCntr.GetComponent<ButtonController>();
 
-
-
         GM = FindGM.GetComponent<GameManager>();
        
-      
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -141,7 +138,7 @@ public class ButtonOpen : MonoBehaviour
 
     }
 
-    public void SlideResum()//ボタン
+    public void SlideResume()//ボタン
     {
         GM.Cancel_Sound();
 
@@ -188,7 +185,7 @@ public class ButtonOpen : MonoBehaviour
         }
 
         openNow = false;
-        cancelOK=false;
+        cancelOK = false;
     }
 
     

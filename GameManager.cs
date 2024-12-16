@@ -12,20 +12,21 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
+    
     [SerializeField] 
-    private Player_Battle_Controller plaBcon;
+    private Player_Battle_Controller plaBcon; //これはマシな方の命名規則。他の変数もこれに統一しましょう。何なら playerBCon とかにしてもいいかもしれない
 
     [SerializeField] 
-    private Player_Rest_Controller plaRcon;
+    private Player_Rest_Controller plaRcon; //これはマシな方の命名規則。他の変数もこれに統一しましょう。何なら playerRCon とかにしてもいいかもしれない
 
     [SerializeField] 
-    private Player_Status_Controller plaScon;
+    private Player_Status_Controller plaScon; //これはマシな方の命名規則。他の変数もこれに統一しましょう。何なら playerSCon とかにしてもいいかもしれない
 
     [SerializeField] 
-    private GameObject placon;
+    private GameObject playerObj; //説明書きましょう。何のオブジェクトかわかりにくいです。
 
     [SerializeField]
-    private GameObject levelUPEffct;
+    private GameObject levelUPEffect;
 
     [SerializeField] 
     private GameObject enemySummonEffect;
@@ -56,9 +57,9 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI levelUpText;
 
     [SerializeField]
-    private GameObject gameOver;
+    private GameObject gameOver; //説明書きましょう。何のオブジェクトかわかりにくいです。
 
-    private Gamepad gamepad;
+    private Gamepad gamepad; //説明書きましょう。何のオブジェクトかわかりにくいです。
 
     [SerializeField]
     private GameObject musicManager;
@@ -67,10 +68,10 @@ public class GameManager : MonoBehaviour
     private SettingData settingData;
 
     [SerializeField] 
-    private AudioSource adios;
+    private AudioSource audioSource;
 
     [SerializeField]
-    private AudioClip move;
+    private AudioClip audioClip;
 
     [SerializeField]
     private List<AudioClip> player_Sounds = new List<AudioClip>();
@@ -97,7 +98,7 @@ public class GameManager : MonoBehaviour
     {
         if (Time.timeScale != 1.0f)
         { 
-        Time.timeScale = 1.0f;
+            Time.timeScale = 1.0f;
         }
 
         musicManager.GetComponent<AudioSource>().volume = settingData.BgmVolume;
@@ -108,14 +109,14 @@ public class GameManager : MonoBehaviour
 
         if (startUI != null)
         { 
-        startUI.SetActive(true);
+            startUI.SetActive(true);
             //adios.PlayOneShot(UI_Sounds[6]);
-            adios.PlayOneShot(UI_Sounds[7]);
+            audioSource.PlayOneShot(UI_Sounds[7]);
         }
 
-        plaBcon = placon.GetComponent<Player_Battle_Controller>();
-        plaRcon = placon.GetComponent <Player_Rest_Controller>();
-        plaScon = placon.GetComponent<Player_Status_Controller>();
+        plaBcon = playerObj.GetComponent<Player_Battle_Controller>();
+        plaRcon = playerObj.GetComponent <Player_Rest_Controller>();
+        plaScon = playerObj.GetComponent<Player_Status_Controller>();
 
         damageText = damageUI.GetComponentInChildren<TextMeshProUGUI>();
         playerDamageText = playerDamageUI.GetComponentInChildren<TextMeshProUGUI>();
@@ -124,20 +125,19 @@ public class GameManager : MonoBehaviour
 
         gamepad = Gamepad.current;
 
-        adios.GetComponent<AudioSource>();
+        audioSource.GetComponent<AudioSource>();
         
     }
-
-    // Update is called once per frame
    
     /// <summary>
     /// プレイヤーが敵に攻撃を与える又は、敵から攻撃を受けた際のダメージ計算のメソッドです。引数は対象の「防御力」と「攻撃力」を代入してください。
     /// </summary>
     /// <param name="Defence"></param>
-    public int DamegeCalculation(int Defence,int AttackPower)//ダメージ計算
+    public int DamageCalculation(int Defence,int AttackPower)//ダメージ計算
     {
 
-        int trueDamage = (AttackPower / 2 - Defence / 4);
+        //以下のマジックナンバーすべて変数化するか、コメント書いてください。なぜ２？なぜ４？
+        int trueDamage = (AttackPower / 2 - Defence / 4); 
 
         int subDamage = Random.Range(0, AttackPower / 16);
 
@@ -158,14 +158,14 @@ public class GameManager : MonoBehaviour
             baseDamage = fewDamage;
         }
 
-        int resultDamege = baseDamage + Random.Range((baseDamage/16) - 1, (baseDamage / 16) + 1);
+        int resultDamage = baseDamage + Random.Range((baseDamage/16) - 1, (baseDamage / 16) + 1);
 
-        if (resultDamege < 0)
+        if (resultDamage < 0)
         {
-            resultDamege = 0;
+            resultDamage = 0;
         }
         
-        return resultDamege;
+        return resultDamage;
     }
 
     /// <summary>
@@ -173,17 +173,17 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="collider"></param>
     /// <param name="damage"></param>
-    public void DamageText(Collider collider, int damage,float uipos)
+    public void DamageText(Collider collider, int damage,float UIpos)
     {
 
         if (collider == collider.GetComponent<CharacterController>())
         {
-            Instantiate<GameObject>(playerDamageUI, collider.bounds.center - Camera.main.transform.forward * uipos, Quaternion.identity);
+            Instantiate<GameObject>(playerDamageUI, collider.bounds.center - Camera.main.transform.forward * UIpos, Quaternion.identity);
             playerDamageText.text = damage.ToString();
         }
         else
         {
-            Instantiate<GameObject>(damageUI, collider.bounds.center - Camera.main.transform.forward * uipos, Quaternion.identity);
+            Instantiate<GameObject>(damageUI, collider.bounds.center - Camera.main.transform.forward * UIpos, Quaternion.identity);
             damageText.text = damage.ToString();
         }
 
@@ -199,85 +199,133 @@ public class GameManager : MonoBehaviour
     {
         Instantiate<GameObject>(expUI, collider.bounds.center - Camera.main.transform.forward * 0.2f, Quaternion.identity);
         expText.text = "Exp+" + getExp.ToString();
+        //0.2マジックナンバー！変数化かコメント書いてください。
     }
 
     public void Player_LevelUp_EffectAndSound(Collider collider,GameObject target)
     {
-        adios.PlayOneShot(player_Sounds[9]);
+        audioSource.PlayOneShot(player_Sounds[9]); //レベルアップ音を再生する
        var obj = Instantiate<GameObject>(levelUpUI, collider.bounds.center - Camera.main.transform.up * 1.0f, Quaternion.identity);
         obj.transform.SetParent(collider.transform);
 
-       var obj2 = Instantiate(levelUPEffct, target.transform.position, Quaternion.identity);
+       var obj2 = Instantiate(levelUPEffect, target.transform.position, Quaternion.identity);
         obj2.transform.SetParent(target.transform);
-        Invoke("LevUPEffectDes", 5f);
+        Invoke("LevUPEffectDes", 5f); //5秒後にレベルアップエフェクトを削除する
     }
+
+    /// <summary>
+    /// レベルアップエフェクトを削除するメソッドです。
+    /// </summary>
     private void LevUPEffectDes()
     { 
-    Destroy(levelUPEffct);
+        Destroy(levelUPEffect);
     }
+
+    /// <summary>
+    /// プレイヤーの移動音を再生します。
+    /// </summary>
     public void Player_Swing_Sound()
     {
-        adios.PlayOneShot(player_Sounds[0]);
+        audioSource.PlayOneShot(player_Sounds[0]);
     }
 
+/// <summary>
+/// プレイヤーのダッシュ開始音を再生します。
+/// </summary>
     public void Player_DashStart_Sound()
     {
-        adios.PlayOneShot(player_Sounds[1]);
+        audioSource.PlayOneShot(player_Sounds[1]);
     }
+    /// <summary>
+    /// プレイヤーのジャンプ音を再生します。
+    /// </summary>
     public void Player_Jump_Sound()
     {
-        adios.PlayOneShot(player_Sounds[2]);
+        audioSource.PlayOneShot(player_Sounds[2]);
     }
+    /// <summary>
+    /// プレイヤーのダブルジャンプ音を再生します。
+    /// </summary>
     public void Player_DoubleJump_Sound()
     {
-        adios.PlayOneShot(player_Sounds[3]);
+        audioSource.PlayOneShot(player_Sounds[3]);
     }
+    /// <summary>
+    /// プレイヤーの着地音を再生します。
+    /// </summary>
     public void Player_Landing_Sound()
     {
-        adios.PlayOneShot(player_Sounds[4]);
+        audioSource.PlayOneShot(player_Sounds[4]);
     }
+    /// <summary>
+    /// プレイヤーの回避音を再生します。
+    /// </summary>
     public void Player_Avoidance_Sound()
     {
-        adios.PlayOneShot(player_Sounds[5]);
+        audioSource.PlayOneShot(player_Sounds[5]);
     }
 
+/// <summary>
+/// プレイヤーのダメージ音を再生します。
+/// </summary>
     public void Player_Damage_Sound()
     {
-        adios.PlayOneShot(player_Sounds[6]);
+        audioSource.PlayOneShot(player_Sounds[6]);
     }
 
+/// <summary>
+/// プレイヤーのノックバック音を再生します。
+/// </summary>
     public void Player_KnockBack_Sound()
     {
-        adios.PlayOneShot(player_Sounds[7]);
+        audioSource.PlayOneShot(player_Sounds[7]);
     }
 
+/// <summary>
+/// プレイヤーの攻撃音を再生します。
+/// </summary>
     public void Player_LockOn_Sound()
     {
-        adios.PlayOneShot(player_Sounds[10]);
+        audioSource.PlayOneShot(player_Sounds[10]);
     }
 
+/// <summary>
+/// プレイヤーのゲームオーバー音を再生します。
+/// </summary>
     private void Player_GameOver_Sound()
     {
-        adios.PlayOneShot(player_Sounds[11]);
+        audioSource.PlayOneShot(player_Sounds[11]);
    
     }
 
+/// <summary>
+///     プレイヤーの移動音を再生します。
+/// </summary>
     public void Player_Move_Sound_1()
     {
-        adios.PlayOneShot(player_Sounds[12]);
+        audioSource.PlayOneShot(player_Sounds[12]);
     }
 
+/// <summary>
+/// プレイヤーの移動音を再生します。
+/// </summary>
     public void Player_Move_Sound_2()
     {
-        adios.PlayOneShot(player_Sounds[13]);
+        audioSource.PlayOneShot(player_Sounds[13]);
     }
+    /// <summary>
+    /// プレイヤーの移動音を再生します。
+    /// </summary>
     public void Decision_Sound()
     {
-        adios.PlayOneShot(UI_Sounds[4]);
+        audioSource.PlayOneShot(UI_Sounds[4]);
     }
+    /// <summary>
+    /// プレイヤーの移動音を再生します。
+    /// </summary>
     public void Cancel_Sound()
     {
-        adios.PlayOneShot(UI_Sounds[5]);
+        audioSource.PlayOneShot(UI_Sounds[5]);
     }
     /// <summary>
     /// 敵が召喚された時のエフェクトと効果音を発生させます。引数には「敵のオブジェクト」を代入してください。
@@ -286,22 +334,32 @@ public class GameManager : MonoBehaviour
     public void Enemy_Summon_EffectAndSound(GameObject target)
     {
         Instantiate(enemySummonEffect,target.transform.position,Quaternion.Euler(-90f, 0f, 0f));
-        adios.PlayOneShot(enemy_Sounds[0]);
+        //説明書いてください。
+        audioSource.PlayOneShot(enemy_Sounds[0]);
     }
 
+/// <summary>
+/// 敵の攻撃音を再生します。引数には「攻撃番号」を代入してください。
+/// </summary>
+/// <param name="attackNum"></param>
     public void Enemy_Attack_Sound(int attackNum)
     {
-        adios.PlayOneShot(enemy_Attack_Sounds[attackNum]);
+        audioSource.PlayOneShot(enemy_Attack_Sounds[attackNum]);
     }
 
+/// <summary>
+/// 敵が攻撃を受けた時のエフェクトと効果音を発生させます。引数には「敵のオブジェクト」を代入してください。
+/// </summary>
+/// <param name="target"></param>
     public void Enemy_Hit_EffectAndSound(GameObject target)
     {
         Instantiate(enemyHitEffect, target.transform.position += Vector3.up, Quaternion.identity);
-        adios.PlayOneShot(player_Sounds[8]);
+        audioSource.PlayOneShot(player_Sounds[8]);
 
         if (gamepad != null)
         {
             StartCoroutine(gamePadVibration(0,0.5f,0.1f));
+            //説明書いてください。
         }
       
     }
@@ -316,48 +374,48 @@ public class GameManager : MonoBehaviour
     public void Enemy_Die_EffectAndSound(GameObject target)
     {
         Instantiate(enemyDieEffect,target.transform.position,Quaternion.Euler(-90f, 0f, 0f));
-        adios.PlayOneShot(enemy_Sounds[1]);
+        audioSource.PlayOneShot(enemy_Sounds[1]);
     }
 
     public void Boss_Action_Sound(int soundNumber)
     {
-        adios.PlayOneShot(boss_Sounds[soundNumber]);
+        audioSource.PlayOneShot(boss_Sounds[soundNumber]);
     }
 
     public void Menu_Open_Sound()
     {
-        adios.PlayOneShot(UI_Sounds[0]);
+        audioSource.PlayOneShot(UI_Sounds[0]);
     }
 
     public void Select_Sound()
     {
-        adios.PlayOneShot(UI_Sounds[2]);
+        audioSource.PlayOneShot(UI_Sounds[2]);
     }
 
     public void Select_Ceiling_Sound()
     {
-        adios.PlayOneShot(UI_Sounds[3]);
+        audioSource.PlayOneShot(UI_Sounds[3]);
     }
 
     public void UI_Slide_Sound()
     {
-        adios.PlayOneShot(UI_Sounds[1]);
+        audioSource.PlayOneShot(UI_Sounds[1]);
     }
 
     public void LoadingStart_Sound()
     {
-        adios.PlayOneShot(UI_Sounds[6]);
-        adios.PlayOneShot(UI_Sounds[7]);
+        audioSource.PlayOneShot(UI_Sounds[6]);
+        audioSource.PlayOneShot(UI_Sounds[7]);
     }
 
     public void Get_Weapon_Sound()
     {
-        adios.PlayOneShot(other_Sounds[0]);
+        audioSource.PlayOneShot(other_Sounds[0]);
     }
 
     public void Portal_Appearance_Sound()
     {
-        adios.PlayOneShot(other_Sounds[1]);
+        audioSource.PlayOneShot(other_Sounds[1]);
     }
 
     public void BGMStop()

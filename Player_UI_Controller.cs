@@ -8,12 +8,15 @@ using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.PlayerLoop;
 
+/// <summary>
+/// プレイヤー関連UIを管理するクラス
+/// </summary>
 public class Player_UI_Controller : MonoBehaviour
 {
     private bool openMenu = false;
 
     [SerializeField]
-    private GameObject uiPanel;
+    private GameObject UIPanel;
 
     [SerializeField]
     private PlayableDirector playable;
@@ -24,43 +27,40 @@ public class Player_UI_Controller : MonoBehaviour
     private GameObject findCine;
 
     [SerializeField]
-    private PlayerInput plain;//インプットシステム
+    private PlayerInput playerInput;//インプットシステム
 
     [SerializeField]
     private ButtonOpen buttonOpen;
     [SerializeField]
-    private GameObject Findbutton;
+    private GameObject findbutton;
 
     [SerializeField]
-    private Player_Battle_Controller plabat;
+    private Player_Battle_Controller playerBCon;
 
     [SerializeField]
-    private GameManager GM;
+    private GameManager gameManager;
     [SerializeField]
-    private GameObject FindGM;
+    private GameObject findGM;
 
     [SerializeField]
     private GameObject musicManager;
 
   
-
-    // Start is called before the first frame update
     void Start()
     {
-        uiPanel.SetActive(false);
+        UIPanel.SetActive(false);
 
         cineVir = findCine.GetComponent<CinemachineVirtualCameraBase>();
-        plain = gameObject.GetComponent<PlayerInput>();
-        plabat = gameObject.GetComponent<Player_Battle_Controller>();
-        buttonOpen = Findbutton.GetComponent<ButtonOpen>();
-        GM = FindGM.GetComponent<GameManager>();
+        playerInput = gameObject.GetComponent<PlayerInput>();
+        playerBCon = gameObject.GetComponent<Player_Battle_Controller>();
+        buttonOpen = findbutton.GetComponent<ButtonOpen>();
+        gameManager = findGM.GetComponent<GameManager>();
        
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (plain.actions["Cancel"].triggered)
+        if (playerInput.actions["Cancel"].triggered)
         {
             Cancel();
         }
@@ -68,13 +68,13 @@ public class Player_UI_Controller : MonoBehaviour
 
     public void Pause(InputAction.CallbackContext context)
     {
-            if (openMenu||plabat.GameStarting == false||plabat.GameOver) return;
+            if (openMenu||playerBCon.GameStarting == false||playerBCon.GameOver) return;
 
-            musicManager.GetComponent<AudioSource>().volume /= 5;
+            musicManager.GetComponent<AudioSource>().volume /= 5; //マジックナンバー発見！変数化・定数化・コメント残してください
 
-            GM.Menu_Open_Sound();
+            gameManager.Menu_Open_Sound();
 
-            uiPanel.SetActive(true);//UIパネルを表示
+            UIPanel.SetActive(true);//UIパネルを表示
 
             playable.Play();//UIタイムラインアニメーション再生
 
@@ -88,7 +88,7 @@ public class Player_UI_Controller : MonoBehaviour
 
     public void ChangeActionMap()//シグナルで制御
     {
-        plain.SwitchCurrentActionMap("UI");//操作を切り替える
+        playerInput.SwitchCurrentActionMap("UI");//操作を切り替える
         playable.Pause();
     }
 
@@ -107,7 +107,7 @@ public class Player_UI_Controller : MonoBehaviour
 
         if (openMenu == false || buttonOpen.OpenNow) return;
 
-        GM.Cancel_Sound();
+        gameManager.Cancel_Sound();
 
         playable.Resume();
 
@@ -117,13 +117,13 @@ public class Player_UI_Controller : MonoBehaviour
 
     public void MenuClose()//シグナルで制御
     {  
-        uiPanel.SetActive(false);
+        UIPanel.SetActive(false);
 
         cineVir.enabled = true;
 
-        plain.SwitchCurrentActionMap("Player");
+        playerInput.SwitchCurrentActionMap("Player");
 
-        musicManager.GetComponent<AudioSource>().volume *= 5;
+        musicManager.GetComponent<AudioSource>().volume *= 5; //マジックナンバー発見！変数化・定数化・コメント残してください
 
         Time.timeScale = 1f;
     }
