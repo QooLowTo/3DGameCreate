@@ -11,8 +11,7 @@ using UnityEngine.UI;
 /// </summary>
 public class HealthBarScript : MonoBehaviour
 {
-    [SerializeField]
-    Player_Status_Controller plasta;
+    Player_Status_Controller plaSta;
 
     [SerializeField]
     Slider slider;
@@ -29,6 +28,17 @@ public class HealthBarScript : MonoBehaviour
     [SerializeField]
     Image fill;
 
+    private GameObject findPla;
+
+    private void Start()
+    {
+        findPla = GameObject.FindWithTag("Player");
+
+        plaSta = findPla.GetComponent<Player_Status_Controller>();
+
+        gameObject.SetActive(false);
+    }
+
     /// <summary>
     /// スライダーの値を引数の値に変更するメソッド
     /// </summary>
@@ -37,9 +47,9 @@ public class HealthBarScript : MonoBehaviour
     
         slider.value = health;
 
-        hpText.text = "<u>HP:" + plasta.PlayerHP + "/" + plasta.LivePlayerHP;
+        hpText.text = "<size=50>■H</size>P:<size=50>" + plaSta.LivePlayerHP + "■";
 
-        lveText.text = "<u><scale=0.8>Lv."+ "</scale>" + plasta.PlayerLevel;
+        lveText.text = "□<size=60>L</size>v.<size=60>" + plaSta.PlayerLevel + "</size>□";
 
         hpText.color = gradient.Evaluate(slider.normalizedValue);
 
@@ -55,6 +65,7 @@ public class HealthBarScript : MonoBehaviour
     public void SetMaxHealth(int maxHealth) { 
     
         slider.maxValue = maxHealth;
+
         slider.value = maxHealth;
 
         hpText.color = gradient.Evaluate(1f);
