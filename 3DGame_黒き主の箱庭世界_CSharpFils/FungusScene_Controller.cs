@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+
 /// <summary>
 /// Fungusを用いたイベントを制御するクラスです。
 /// </summary>
@@ -14,10 +15,10 @@ public class FungusScene_Controller : MonoBehaviour
 {
   
     [SerializeField,Header("決定カーソルオブジェクト")]
-    private GameObject decisionCsr;
+    private GameObject decisionCsr;　//書いて
 
     [SerializeField,Header("プレイヤー")]
-    private GameObject findPla;
+    private GameObject findPlayer;
 
     [SerializeField,Header("遷移画面のPlayerableDirector")]
     private PlayableDirector playable;
@@ -25,16 +26,16 @@ public class FungusScene_Controller : MonoBehaviour
     [SerializeField]
     private GameObject loadSceneObject; 
 
-    private Player_Status_Controller plasta;
+    private Player_Status_Controller playerStatCon;
 
 
-    private PlayerInput plain;
+    private PlayerInput playerInput;
 
   
-    private Flowchart flocha;
+    private Flowchart flowchart;
 
     [SerializeField,Header("FungusのFlowchart参照オブジェクト")]
-    private GameObject flochaOb;
+    private GameObject flowChartObj;
 
     private SoundManager soundManager;
 
@@ -45,7 +46,7 @@ public class FungusScene_Controller : MonoBehaviour
     private StatusDate statusData;
 
     [SerializeField]
-    private FlagManagementData flagmentData;
+    private FlagManagementData flagManagementData;
 
     [SerializeField,Header("ロードするシーン名")]
     private string loadSceneName;
@@ -53,27 +54,22 @@ public class FungusScene_Controller : MonoBehaviour
     [SerializeField,Header("Finngusに発行するメッセージ")]
     private string fungusSendMessage;
 
-    bool iventing = false;
+    bool iventing = false; //説明書いてね
 
     bool decision = false;
 
-    // Start is called before the first frame update
     void Start()
     {
-        //findPla = GameObject.FindWithTag("Player");
-        //flochaOb = GameObject.FindWithTag("Fungus");
-  
       
-        plasta = findPla.GetComponent<Player_Status_Controller>();
-        plain = findPla.GetComponent<PlayerInput>();
-        flocha = flochaOb.GetComponent<Flowchart>();
+        playerStatCon = findPlayer.GetComponent<Player_Status_Controller>();
+        playerInput = findPlayer.GetComponent<PlayerInput>();
+        flowchart = flowChartObj.GetComponent<Flowchart>();
         soundManager = findSoundManager.GetComponent<SoundManager>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (plain.actions["Decision"].triggered)
+        if (playerInput.actions["Decision"].triggered)
         {
             decision = true;
 
@@ -103,30 +99,15 @@ public class FungusScene_Controller : MonoBehaviour
         if (other.gameObject.tag == "Player" && !iventing  && decision)
         {
 
-            ChageAction();
+            ChangeAction();
 
             decisionCsr.SetActive(false);
 
             iventing = true;
 
         }
-
-
     }
 
-    //public void OnDecision(InputAction.CallbackContext context)
-    //{
-    //      if (findPlayer == false) return;
-        
-    //        ChageAction();
-
-    //        decisionCsr.SetActive(false);
-
-    //        iventing = true;
-
-    //        findPlayer = false;
-        
-    //}
 
     private void OnTriggerExit(Collider other)
     {
@@ -138,61 +119,45 @@ public class FungusScene_Controller : MonoBehaviour
     }
 
     //---FunGusEventで使用---//
-    public void ChageAction()
+    public void ChangeAction()
     {
-        plain.SwitchCurrentActionMap("UI");
+        playerInput.SwitchCurrentActionMap("UI");
         //LoadingStart();//本来ならFunGusで呼ぶ関数です。
-        flocha.SendFungusMessage(fungusSendMessage);
+        flowchart.SendFungusMessage(fungusSendMessage);
     }
 
-    public void OnFinishedIvent()
+    public void OnFinishedEvent()
     {
-        plain.SwitchCurrentActionMap("Player");
+        playerInput.SwitchCurrentActionMap("Player");
         iventing = false;
     }
 
     public void LoadingStart()
     {
-        flagmentData.SceneName = loadSceneName;
+        flagManagementData.SceneName = loadSceneName;
         UpdateStatas();
         soundManager.MusicManager.GetComponent<AudioSource>().Stop();
         soundManager.LoadingStart_Sound();
         loadSceneObject.SetActive(true);
         playable.Play();
     }
-    //------------------------//
-
-    //public void Loading()
-    //{ 
-    // StartCoroutine(LoadSceneAsync("LoadingScene"));
-    //}
-
-    //IEnumerator LoadSceneAsync(string sceneName)
-    //{
-    //    AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-
-    //    while (!asyncLoad.isDone)
-    //    {
-    //        yield return null;
-    //    }
-    //}
-
+   
     /// <summary>
     /// ステータス格納オブジェクトにそれぞれのステータスを格納するメソッド。
     /// </summary>
     private void UpdateStatas()
     { 
-       statusData.D_PlayerLevel = plasta.PlayerLevel;
+       statusData.D_PlayerLevel = playerStatCon.PlayerLevel;
 
-       statusData.D_PlayerExp = plasta.PlayerExp;
+       statusData.D_PlayerExp = playerStatCon.PlayerExp;
 
-       statusData.D_PlayerHP = plasta.PlayerHP;
+       statusData.D_PlayerHP = playerStatCon.PlayerHP;
 
-       statusData.D_LivePlayerHP = plasta.LivePlayerHP;
+       statusData.D_LivePlayerHP = playerStatCon.LivePlayerHP;
 
-       statusData.D_PlayerAttackPower = plasta.PlayerAttackPower;
+       statusData.D_PlayerAttackPower = playerStatCon.PlayerAttackPower;
 
-       statusData.D_PlayerDefance = plasta.PlayerDefance;
+       statusData.D_PlayerDefance = playerStatCon.PlayerDefance;
      
     }
 }

@@ -12,24 +12,11 @@ using UnityEngine.UI;
 /// </summary>
 public class SettingBarController : UIManager
 {
-    //[SerializeField]
-    //private SettingData settingData;
-
-    //private UIManager uiManager;
-
-    //private GameObject findUiManager;
-
     [SerializeField]
     private List<Slider> settingSliderList = new List<Slider>();
 
     [SerializeField]
     private List<TextMeshProUGUI> settingValues = new List<TextMeshProUGUI>();
-
-   
-    //[SerializeField]
-    //private PlayerInput plain;
-    //[SerializeField]
-    //private GameObject findPlain;
 
     private float bgmValue;
 
@@ -43,10 +30,9 @@ public class SettingBarController : UIManager
 
     private bool vibrationOn = true;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //マジックナンバーパレード！！変数化してね
         StartUISetting();
 
         settingSliderList[0].value = settingData.BgmVolume * 10;
@@ -77,25 +63,6 @@ public class SettingBarController : UIManager
 
         
     }
-
-    // Update is called once per frame
- 
-    //private void Update()
-    //{
-        
-
-       
-
-      
-       
-
-       
-      
-
-        
-       
-       
-    //}
 
     public void SettingBGMVolum()
     {
@@ -172,7 +139,6 @@ public class SettingBarController : UIManager
 
         Application.targetFrameRate = settingData.FrameRate;
 
-        //plain.actions["Angle"].processors
     }
 
    

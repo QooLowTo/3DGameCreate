@@ -14,39 +14,42 @@ public class BattleManager : GameManager
 
 
     [SerializeField]
-    private GameObject levelUPEffct;
+    private GameObject levelUPEffect; //説明は？？
 
     [SerializeField]
-    private GameObject enemySummonEffect;
+    private GameObject enemySummonEffect;　//説明は？？
 
     [SerializeField]
-    private GameObject enemyHitEffect;
+    private GameObject enemyHitEffect;　//説明は？？
 
     [SerializeField]
-    private GameObject enemyDieEffect;
+    private GameObject enemyDieEffect;　//説明は？？
 
     [SerializeField]
-    private GameObject damageUI;
-    private TextMeshProUGUI damageText;
+    private GameObject damageUI;　//説明は？？
+    private TextMeshProUGUI damageText;　//説明は？？
 
     [SerializeField]
-    private GameObject playerDamageUI;
-    private TextMeshProUGUI playerDamageText;
+    private GameObject playerDamageUI;　//説明は？？
+    private TextMeshProUGUI playerDamageText;　//説明は？？
 
     [SerializeField]
-    private GameObject expUI;
-    private TextMeshProUGUI expText;
+    private GameObject expUI;　//説明は？？
+    private TextMeshProUGUI expText;　//説明は？？
+　
+    [SerializeField]
+    private GameObject levelUpUI;　//説明は？？
+    private TextMeshProUGUI levelUpText;　//説明は？？
+
+    private SoundManager soundManager;　//説明は？？
+    [SerializeField]
+    private GameObject findSoundManager;　//説明は？？
 
     [SerializeField]
-    private GameObject levelUpUI;
-    private TextMeshProUGUI levelUpText;
+    private GameObject gameOverObject; //説明は？？
 
-    private SoundManager soundManager;
-    [SerializeField]
-    private GameObject findSoundManager;
 
-    [SerializeField]
-    private GameObject gameOverObject;
+    //以下の部分必要ないなら消してください。残すならなぜ残す必要があるか説明書いてください！
 
     //[SerializeField]
     //protected List<AudioClip> enemy_Sounds = new List<AudioClip>();
@@ -58,8 +61,9 @@ public class BattleManager : GameManager
     //protected List<AudioClip> boss_Sounds = new List<AudioClip>();
 
     //public bool GameOver { get => gameOver; set => gameOver = value; }
+
     public bool BossBattle { get => bossBattle; set => bossBattle = value; }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         StartGameSetting();
@@ -82,7 +86,8 @@ public class BattleManager : GameManager
 
             startUI.SetActive(true);
 
-            soundManager.OneShot_UI_Sound(7);//ロード完了音
+            soundManager.OneShot_UI_Sound(7);//ロード完了音 
+            // この７はマジックナンバーになります。変数化するかもしくはなぜ７なのか書いてください。
         }
 
         if (debugMode)
@@ -92,12 +97,6 @@ public class BattleManager : GameManager
            
         }
     }
-
-    // Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
 
     /// <summary>
     /// プレイヤーが敵に攻撃を与える又は、敵から攻撃を受けた際のダメージ計算のメソッドです。引数は対象の「防御力」と「攻撃力」を代入してください。
@@ -114,6 +113,8 @@ public class BattleManager : GameManager
 
         int baseDamage = 1;
 
+        //ダメージ計算の式
+        //攻撃力が防御力の4/7倍以上ならtrueDamage＜＝＝こういう説明を書くか４と７と２の変数化をしてください
         if (AttackPower > Defence * (4 / 7))
         {
             baseDamage = trueDamage;
@@ -127,14 +128,15 @@ public class BattleManager : GameManager
             baseDamage = fewDamage;
         }
 
-        int resultDamege = baseDamage + Random.Range((baseDamage / 16) - 1, (baseDamage / 16) + 1);
+        //マジックナンバーを使わないようにするために、変数化するか、なぜこの数字を使うのか説明を書いてください。
+        int resultDamage = baseDamage + Random.Range((baseDamage / 16) - 1, (baseDamage / 16) + 1);
 
-        if (resultDamege <= 0)
+        if (resultDamage <= 0)
         {
-            resultDamege = 1;
+            resultDamage = 1;
         }
 
-        return resultDamege;
+        return resultDamage;
     }
 
     /// <summary>
@@ -142,9 +144,9 @@ public class BattleManager : GameManager
     /// </summary>
     /// <param name="collider"></param>
     /// <param name="damage"></param>
-    public void DamageText(Collider collider, int damage, float uipos)
+    public void DamageText(Collider collider, int damage, float UIpos)
     {
-        var uiPotion = Camera.main.transform.forward * uipos;
+        var uiPotion = Camera.main.transform.forward * UIpos;
 
         if (collider == collider.GetComponent<CharacterController>())
         {
@@ -171,16 +173,18 @@ public class BattleManager : GameManager
     /// <param name="getExp"></param>
     public void GetExp(Collider collider, int getExp)
     {
-      
 
+        //0.2fはマジックナンバーです。変数化するか、なぜ0.2fなのか説明を書いてください。
+        
         Instantiate<GameObject>(expUI, collider.bounds.center - Camera.main.transform.forward * 0.2f, Quaternion.identity);
 
         expText.text = "Exp+" + getExp.ToString();
 
         plaSta.PlayerExp += getExp;
 
+        //99レベルまでの経験値を取得した場合、レベルアップの処理を行います。この説明でいいのか？
         if (plaSta.PlayerLevel < 99)
-        { 
+        {
             while (plaSta.PlayerExp >= expManager.ExpTablesList[statusDate.D_ExpListElement])
             {
                 plaExp.LevelUp();
@@ -200,10 +204,11 @@ public class BattleManager : GameManager
 
         obj.transform.SetParent(collider.transform);
 
-        var obj2 = Instantiate(levelUPEffct, target.transform.position, Quaternion.identity);
+        var obj2 = Instantiate(levelUPEffect, target.transform.position, Quaternion.identity);
 
         obj2.transform.SetParent(target.transform);
 
+        //5秒後オブジェクト削除
         Destroy(obj2, 5f);
     }
 
@@ -213,19 +218,14 @@ public class BattleManager : GameManager
     /// <param name="target"></param>
     public void Enemy_Summon_Effect(GameObject target)
     {
+        //以下の90fはマジックナンバーです。変数化するか、なぜ90fなのか説明を書いてください。
         Instantiate(enemySummonEffect, target.transform.position, Quaternion.Euler(-90f, 0f, 0f));
-        //adios.PlayOneShot(enemy_Sounds[0]);
+       
     }
-
-    //public void Enemy_Attack_Sound(int attackNum)
-    //{
-    //    adios.PlayOneShot(enemy_Attack_Sounds[attackNum]);
-    //}
 
     public void Enemy_Hit_Effect(GameObject target)
     {
         Instantiate(enemyHitEffect, target.transform.position += Vector3.up, Quaternion.identity);
-        //soundManager.OneShot_Player_Sound(8);
     }
 
     public void Enemy_Hit_Vibration()
@@ -234,6 +234,7 @@ public class BattleManager : GameManager
 
         if (gamepad != null)
         {
+            //変数化してください
             StartCoroutine(GamePadVibration(0, 0.5f, 0.1f));
         }
     }
@@ -244,14 +245,10 @@ public class BattleManager : GameManager
     /// <param name="target"></param>
     public void Enemy_Die_Effect(GameObject target)
     {
-        Instantiate(enemyDieEffect, target.transform.position, Quaternion.Euler(-90f, 0f, 0f));
-        //adios.PlayOneShot(enemy_Sounds[1]);
+        //以下の90fはマジックナンバーです。変数化するか、なぜ90fなのか説明を書いてください。
+        Instantiate(enemyDieEffect, target.transform.position, Quaternion.Euler(-90f, 0f, 0f));      
     }
 
-    //public void Boss_Action_Sound(int soundNumber)
-    //{
-    //    adios.PlayOneShot(boss_Sounds[soundNumber]);
-    //}
 
     public void Boss_Die_Vibration()
     {
@@ -259,6 +256,7 @@ public class BattleManager : GameManager
 
         if (gamepad != null)
         {
+            //変数化してください
             StartCoroutine(Boss_Kill_GamePadVibration(0.8f, 0.8f, 3f));
         }
     }

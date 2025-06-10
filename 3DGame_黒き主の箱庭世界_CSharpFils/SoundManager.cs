@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class SoundManager : GameManager
 {
-    private AudioSource adios;
+    private AudioSource audioS;
 
     [SerializeField,Header("BGMのAudioSouceの参照オブジェクト")]
     private GameObject musicManager;
@@ -29,24 +29,25 @@ public class SoundManager : GameManager
     protected List<AudioClip> other_Sounds = new List<AudioClip>();
 
     public GameObject MusicManager { get => musicManager; set => musicManager = value; }
-    public AudioSource Adios { get => adios; set => adios = value; }
+    public AudioSource AudioS { get => audioS; set => audioS = value; }
     public List<AudioClip> Ui_Sounds { get => ui_Sounds; set => ui_Sounds = value; }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-        adios = gameObject.GetComponent<AudioSource>();
+        audioS = gameObject.GetComponent<AudioSource>();
 
         gameObject.GetComponent<AudioSource>().volume = settingData.SoundVolum;
 
         musicManager.GetComponent<AudioSource>().volume = settingData.BgmVolume;
     }
+    
     /// <summary>
     /// プレイヤーにおける様々な効果音を鳴らすメソッド。引数には効果音リストの番号の値を入力してください。
     /// </summary>
     /// <param name="soundNum"></param>
     public void OneShot_Player_Sound(int soundNum)
     {
-        adios.PlayOneShot(player_Sounds[soundNum]);
+        audioS.PlayOneShot(player_Sounds[soundNum]);
     }
 
     /// <summary>
@@ -55,7 +56,7 @@ public class SoundManager : GameManager
     /// <param name="soundNum"></param>
     public void OneShot_Player_Move_Sound(int soundNum)
     {
-        adios.PlayOneShot(player_Walk_Sounds[soundNum]);
+        audioS.PlayOneShot(player_Walk_Sounds[soundNum]);
     }
     /// <summary>
     /// 敵における様々な効果音を鳴らすメソッド。引数には効果音リストの番号の値を入力してください。
@@ -63,7 +64,7 @@ public class SoundManager : GameManager
     /// <param name="soundNum"></param>
     public void OneShot_Enemy_Action_Sound(int soundNum)
     {
-        adios.PlayOneShot(enemy_Sounds[soundNum]);
+        audioS.PlayOneShot(enemy_Sounds[soundNum]);
     }
     /// <summary>
     /// ボスにおける様々な効果音を鳴らすメソッド。引数には効果音リストの番号の値を入力してください。
@@ -71,7 +72,7 @@ public class SoundManager : GameManager
     /// <param name="soundNum"></param>
     public void OneShot_Boss_Action_Sound(int soundNum)
     {
-        adios.PlayOneShot(boss_Sounds[soundNum]);
+        audioS.PlayOneShot(boss_Sounds[soundNum]);
     }
     /// <summary>
     /// UIにおける様々な効果音を鳴らすメソッド。引数には効果音リストの番号の値を入力してください。
@@ -79,7 +80,7 @@ public class SoundManager : GameManager
     /// <param name="soundNum"></param>
     public void OneShot_UI_Sound(int soundNum)
     {
-        adios.PlayOneShot(ui_Sounds[soundNum]);
+        audioS.PlayOneShot(ui_Sounds[soundNum]);
     }
     /// <summary>
     /// その他における様々な効果音を鳴らすメソッド。引数には効果音リストの番号の値を入力してください。
@@ -87,29 +88,29 @@ public class SoundManager : GameManager
     /// <param name="soundNum"></param>
     public void OneShot_Other_Sound(int soundNum)
     {
-        adios.PlayOneShot(other_Sounds[soundNum]);
+        audioS.PlayOneShot(other_Sounds[soundNum]);
     }
     /// <summary>
     /// 決定ボタンを押した際に効果音を鳴らすメソッドです。
     /// </summary>
     public void OneShotDecisionSound()
     {
-        adios.PlayOneShot(ui_Sounds[4]);
+        audioS.PlayOneShot(ui_Sounds[4]);
     }
     /// <summary>
     /// キャンセルボタンを押した際に効果音を鳴らすメソッドです。
     /// </summary>
     public void OneShotCancelSound()
     {
-        adios.PlayOneShot(ui_Sounds[5]);
+        audioS.PlayOneShot(ui_Sounds[5]);
     }
     /// <summary>
     /// ロード開始音を鳴らすメソッドです。
     /// </summary>
     public void LoadingStart_Sound()
     {
-        adios.PlayOneShot(ui_Sounds[6]);
-        adios.PlayOneShot(ui_Sounds[7]);
+        audioS.PlayOneShot(ui_Sounds[6]);
+        audioS.PlayOneShot(ui_Sounds[7]);
     }
 
   

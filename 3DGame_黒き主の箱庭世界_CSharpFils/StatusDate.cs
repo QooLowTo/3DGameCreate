@@ -5,8 +5,9 @@ using UnityEngine;
 /// プレイヤーのステータスを記録するクラスです。
 /// </summary>
 [CreateAssetMenu(menuName = "スクリプタブ/ステータス管理オブジェクト")]
-public class StatusDate : ScriptableObject
+public class StatusData : ScriptableObject
 {
+    //デフォルトデータ
     [SerializeField] 
     private int d_PlayerLevel = 1;
 

@@ -11,7 +11,7 @@ public class Debug_ResetStatus : MonoBehaviour
     private StatusDate gameData;
 
     [SerializeField]
-    private FlagManagementData flagmentData;
+    private FlagManagementData flagManagementData;
 
     [SerializeField]
     private SettingData settingData;
@@ -29,19 +29,12 @@ public class Debug_ResetStatus : MonoBehaviour
     List<int> hpGrowthTableList = new List<int>();
 
     [SerializeField]
-    List<int> attackPGrowthTableList = new List<int>();
+    List<int> attackGrowthTableList = new List<int>(); //
 
     [SerializeField]
-    List<int> defanceGrowthTableList = new List<int>();
+    List<int> defenceGrowthTableList = new List<int>();
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    //void Start()
-    //{
-        
-    //}
-
-    // Update is called once per frame
-
+   
     /// <summary>
     /// プレイヤーのステータスを初期化。
     /// </summary>
@@ -49,6 +42,7 @@ public class Debug_ResetStatus : MonoBehaviour
     {
         if (!ResetOn) return;
 
+        //
         Debug.Log("ステータスを初期化しました。");
         gameData.D_PlayerLevel = 1;
         gameData.D_PlayerExp = 0;
@@ -63,11 +57,11 @@ public class Debug_ResetStatus : MonoBehaviour
         settingData.FrameRate = 60;
         settingData.VibrationON = true;
 
-        flagmentData.TutorialClear = false;
-        flagmentData.Map1Clear = false;
-        flagmentData.Map2Clear = false;
-        flagmentData.GameClear = false;
-        flagmentData.SceneName = "Tutorial";
+        flagManagementData.TutorialClear = false;
+        flagManagementData.Map1Clear = false;
+        flagManagementData.Map2Clear = false;
+        flagManagementData.GameClear = false;
+        flagManagementData.SceneName = "Tutorial";
 
         playerTransformData.LoadTransform = new Vector3(0,0,-16f);
         playerTransformData.LoadRotate = Quaternion.identity;

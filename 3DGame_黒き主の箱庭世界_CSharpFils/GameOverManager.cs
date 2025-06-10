@@ -13,43 +13,22 @@ public class GameOverManager : GameManager
     private PlayableDirector gameOverPlayable;
 
     [SerializeField]
-    private FlagManagementData flagmentData;
-
-    //[SerializeField]
-    //private GameObject post;
+    private FlagManagementData flagManagementData;
 
     [SerializeField,Header("タイトルバック演出用オブジェクト")]
     private GameObject titleback;
 
-    //[SerializeField] 
-    //private GameObject continuationButton;
-
-    //[SerializeField,Header("ロックオンカメラ")]
-    //private CinemachineVirtualCameraBase lockOnCineVir;
-    //[SerializeField]
-    //private GameObject findLookCineVir;
-
     private SoundManager soundManager;
     [SerializeField]
-    private GameObject findSoundManger;
-  
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private GameObject findSoundManager;
+
     void Start()
     {
-        soundManager = findSoundManger.GetComponent<SoundManager>();
+        soundManager = findSoundManager.GetComponent<SoundManager>();
      
     }
 
-    // Update is called once per frame
-
-
-    //public void GameOverPlayableStop()
-    //{ 
-    //    gameOverPlayable.Pause();
-    //    post.SetActive(true);
-    //    Time.timeScale = 0f;
-    //    EventSystem.current.SetSelectedGameObject(continuationButton);
-    //}
+   
     /// <summary>
     /// ボタンで使用。コンテニューボタン。
     /// </summary>
@@ -66,7 +45,7 @@ public class GameOverManager : GameManager
     {
         gameOverPlayable.Resume();
         soundManager.LoadingStart_Sound();
-        flagmentData.SceneName = "HomeMap";
+        flagManagementData.SceneName = "HomeMap";
     }
     /// <summary>
     /// ボタンで使用。押すとタイトルへ戻る。
@@ -75,6 +54,6 @@ public class GameOverManager : GameManager
     {
        titleback.SetActive(true);
         soundManager.OneShotDecisionSound();//決定サウンド
-        flagmentData.SceneName = "Title";
+        flagManagementData.SceneName = "Title";
     }
 }

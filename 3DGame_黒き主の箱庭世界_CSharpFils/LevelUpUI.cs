@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+
 /// <summary>
 /// レベルアップ時に演出するテキストを制御するクラスです。
 /// </summary>
@@ -20,7 +21,9 @@ public class LevelUpUI : MonoBehaviour
 
     [SerializeField]
     private float moveSpeed = 0.4f;//移動値
-    // Start is called before the first frame update
+
+    //以下のもののマジックナンバーをなんとかしてください
+
     void Start()
     {
         popText = GetComponentInChildren<TextMeshProUGUI>();
@@ -33,7 +36,6 @@ public class LevelUpUI : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         transform.rotation = Camera.main.transform.rotation;

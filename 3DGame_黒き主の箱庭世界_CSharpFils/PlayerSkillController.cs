@@ -3,7 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player_Skill_Controller : MonoBehaviour
+public class PlayerSkillController : MonoBehaviour
 {
     [SerializeField]
     private List<GameObject> attackCubeList = new List<GameObject>();
@@ -19,19 +19,13 @@ public class Player_Skill_Controller : MonoBehaviour
 
     private bool skillOn = false;
 
-    private PlayerInput plain;//インプットシステム
+    private PlayerInput playerInput;//インプットシステム
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        plain = gameObject.GetComponent<PlayerInput>();
+        playerInput = gameObject.GetComponent<PlayerInput>();
     }
 
-    // Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
 
     public void SkillOn(InputAction.CallbackContext callback)
     { 
@@ -39,13 +33,13 @@ public class Player_Skill_Controller : MonoBehaviour
 
         if (!skillOn)
         {
-            plain.SwitchCurrentActionMap("SkillMode");
+            playerInput.SwitchCurrentActionMap("SkillMode");
             skillPos.SetActive(true);
             skillOn = true;
         }
         else
         {
-            plain.SwitchCurrentActionMap("Player");
+            playerInput.SwitchCurrentActionMap("Player");
             skillPos.SetActive(false);
             skillOn = false;
         }
@@ -68,7 +62,6 @@ public class Player_Skill_Controller : MonoBehaviour
         }
         else
         {
-            //removeElementNum--;
           
             removeCubeList.RemoveAt(0);
 
@@ -76,6 +69,5 @@ public class Player_Skill_Controller : MonoBehaviour
             removeCubeList[0].DestroyCube();
         }
      
-        //attackCubeList[0].transform.rotation = skillPos.transform.rotation;
     }
 }

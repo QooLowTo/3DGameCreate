@@ -13,17 +13,10 @@ public class UpdateRestartPoint : MonoBehaviour
     [SerializeField]
     private GameObject returnPoint;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         fallingDeath = findfallDeath.GetComponent<FallingDeath>();
     }
-
-    // Update is called once per frame
-    //void Update()
-    //{
-
-    //}
 
     private void OnTriggerEnter(Collider other)
     {

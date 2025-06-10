@@ -4,24 +4,21 @@ using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
+
 /// <summary>
 /// チュートリアル中のプレイヤーの動きを制御するクラスです。
 /// </summary>
-public class Player_Tutorial_Controller : Player_Battle_Controller
+public class PlayerTutorialController : PlayerBattleController
 {
 
-    //private Player_Battle_Controller placon;
+    private Player_Camera_Controller playerCameraCon;
 
-    private Player_Camera_Controller placam;
-
-    private Player_UI_Controller placonUI;
+    private Player_UI_Controller playerUICon;
 
     private TutorialManager tutorialManager;
+
     [SerializeField]
     private GameObject findTutorialManager;
-
-    //[SerializeField, Header("プレイヤーの武器")]
-    //private GameObject myWepon;//プレイヤーの武器
 
     [SerializeField]
     private GameObject hpUI;
@@ -33,16 +30,13 @@ public class Player_Tutorial_Controller : Player_Battle_Controller
 
     private bool stopAttack = true;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         StartCoroutine(Starting());
 
-        //placon = gameObject.GetComponent<Player_Battle_Controller>();
-        placam = gameObject.GetComponent<Player_Camera_Controller>();
+        playerCameraCon = gameObject.GetComponent<Player_Camera_Controller>();
 
-        placonUI = gameObject.GetComponent<Player_UI_Controller>();
+        playerUICon = gameObject.GetComponent<Player_UI_Controller>();
 
         plasta = GetComponent<Player_Status_Controller>();
 
@@ -74,7 +68,6 @@ public class Player_Tutorial_Controller : Player_Battle_Controller
 
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
        
@@ -84,8 +77,7 @@ public class Player_Tutorial_Controller : Player_Battle_Controller
 
         if (!attacking && !jumpAttackingFall && !isDown && !avoidancing && !isChanegeAction && !hitting)
         {
-            //animCon.SetFloat("MoveInput", moveInputAbs);
-
+     
             PlayerMoveInputControl();
         }
         else
@@ -197,14 +189,7 @@ public class Player_Tutorial_Controller : Player_Battle_Controller
         }
     }
 
-   
 
-    //public void GameStart()//シグナルで制御
-    //{
-    //    battleManager.GameStart  = true;
-    //    battleManager.CameraAxis.enabled = true;
-
-    //}
 
     private void OnTriggerEnter(Collider other)
     {
@@ -256,44 +241,23 @@ public class Player_Tutorial_Controller : Player_Battle_Controller
 
            animCon.SetBool("Attacking", true);//AnySatateの制御用
         
-
-        //if (!placon.StopCombo)
-        //{
             attackCombo++;
 
             animCon.SetInteger("AttackCombo", attackCombo);
-        //placon.StopCombo = true;
+
 
             if (attackCombo <= 1)
             {
                 animCon.SetTrigger("Attack");
             }
-        //}
+
 
     }
 
-    //public void Avoidance(InputAction.CallbackContext context)
-    //{
-    //    if (!context.performed || stopAttack || avoidancing  || hitting || isDown || OnGroundLayer(false)) return;
-
-    //    if (moveInputAbs == 0){
-    //        animCon.SetBool("BackAvoidance", true);
-    //    }else if (attacking && moveInput.x >= 0.1f ){
-    //        animCon.SetBool("RightAvoidance", true);
-    //    }else if (placon.Attacking && placon.MoveInput.x <= -0.1f){
-    //        animCon.SetBool("LeftAvoidance", true);
-    //    }else if (placon.MoveInputAbs >= 0.1f){
-    //        animCon.SetBool("ForwardAvoidance", true);
-        
-    //        placon.ForwardAvoidancing = true;
-    //    }
-
-    //    placon.OffAttacking();
-
-    //    placon.SoundManager.OneShotPlayerSound(5);
-
-    //    placon.Avoidancing = true;
-    //}
+   
+   /// <summary>
+   /// 説明書いて
+   /// </summary>
     public void WeaponGet()
     {
         myWepon.SetActive(true);
@@ -303,7 +267,7 @@ public class Player_Tutorial_Controller : Player_Battle_Controller
     { 
         stopAttack = false;
 
-        placam.enabled = true;
+        playerCameraCon.enabled = true;
 
         rig.enabled = true;
 

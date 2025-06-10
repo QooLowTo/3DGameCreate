@@ -5,13 +5,13 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// ゲーム起動時にデータファイルからセーブデータを読み取るクラスです。
 /// </summary>
-public class firstGameLoading : MonoBehaviour
+public class FirstGameLoading : MonoBehaviour
 {
     [SerializeField]
     private SaveLoadSystem saveLoadSystem;
     [SerializeField]
     private GameObject findSaveandLoad;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         saveLoadSystem = findSaveandLoad.GetComponent<SaveLoadSystem>();
@@ -28,7 +28,6 @@ public class firstGameLoading : MonoBehaviour
         StartCoroutine(LoadNextSceneAsync());
     }
 
-    // Update is called once per frame
     IEnumerator LoadNextSceneAsync()
     {
         // 前のロードシーンをアンロード

@@ -20,30 +20,30 @@ public class Enemy : MonoBehaviour
     protected int enemyDefence;
 
     [SerializeField] 
-    private int enemyHitBarrierShield;
+    private int enemyHitBarrierShield; //説明書いて 何のための変数？
 
     [SerializeField, Header("敵の経験値")]
-    protected int getExp;
+    protected int getExp; //敵を倒した際にプレイヤーが得る経験値 -> 合っている？
 
 
-    protected int enemyDamage;
+    protected int enemyDamage; //説明書いて
 
     [SerializeField, Header("ダメージ表記のポジション")]
     protected float damageUIPos = 0.2f;
 
     [SerializeField]
-    private float stoppingDistance;
+    private float stoppingDistance; //説明書いて
   
     [SerializeField,Header("正面方向の力")] 
     protected float forwardForce;//敵が攻撃を受けた際のノックバック量
 
-    private float defaltAgentSpeed;//NavAgentのスピードのデフォルトの値
+    private float defaultAgentSpeed;//NavAgentのスピードのデフォルトの値
 
     [SerializeField]
     private float attackCoolTime = 3;  
     
     [SerializeField]
-    private float return_attackCoolTime = 5f;
+    private float return_attackCoolTime = 5f; //なんのリターン？？
 
     private float stopCoolTime = 0;
 
@@ -59,44 +59,35 @@ public class Enemy : MonoBehaviour
 
     private bool stopping = false;//ダメージを受けるとON。ダメージ後のクールダウン用
 
-    private bool enemyDie = false;//HPが0になるとON
+    private bool enemyDie = false; //HPが０になったらtrueになる。敵の死亡フラグ
 
 
-    protected Player_Status_Controller plaSta;
+    protected Player_Status_Controller playerStatCon; //他のクラスと統一してください
   
     protected NavMeshAgent myAgent;
 
-    protected Animator animCon;
+    protected Animator animator;
 
     protected Rigidbody rb;
 
     [SerializeField] 
-    private CapsuleCollider enemyThisCollider;//敵の物理判定のコライダー
+    private CapsuleCollider enemyCollider;//敵の物理判定のコライダー
 
     [SerializeField] 
-    private BoxCollider enemyThisTriggerCollider;//敵の当たり判定のコライダー
+    private BoxCollider enemyTriggerCollider;//敵の当たり判定のコライダー
 
     [SerializeField] 
-    private Collider AttackCollider;//敵の攻撃判定のコライダー
-
-
-
-
-
-    //private GameManager gameManager; 
+    private Collider attackCollider;//敵の攻撃判定のコライダー
 
     protected SoundManager soundManager;
 
     protected BattleManager battleManager;
-
-    //private GameObject findGameManager;
 
     protected GameObject findSoundManager;
 
     protected GameObject findBattleManager;
       
     protected GameObject target; 
-    // Start is called before the first frame update
 
     private enum ActionType
     { 
@@ -108,57 +99,41 @@ public class Enemy : MonoBehaviour
     public bool EnemyDie { get => enemyDie; set => enemyDie = value; }
     public int EnemyHp { get => enemyHp; set => enemyHp = value; }
     public GameObject Target { get => target; set => target = value; }
-    public Player_Status_Controller PlaSta { get => plaSta; set => plaSta = value; }
+    public Player_Status_Controller PlaSta { get => playerStatCon; set => playerStatCon = value; }
     public BattleManager BattleManager { get => battleManager; set => battleManager = value; }
 
     void Start()
     {  
         StartEnemySetting();
-
-        //findGameManager = GameObject.FindWithTag("GameManager");
-        //findBattleManager = GameObject.FindWithTag("BattleManager");
-        //target = GameObject.FindWithTag("Player");
-
-        //gameManager = findGameManager.GetComponent<GameManager>();
-        //battleManager = findBattleManager.GetComponent<BattleManager>();
-        //plasta = target.GetComponent<Player_Status_Controller>();
-        //myAgent = GetComponent<NavMeshAgent>();
-        //animCon = GetComponent<Animator>();
-        //rb = GetComponent<Rigidbody>();
-       
-        //defaltAgentSpeed = myAgent.speed;
-        //forwardForce = forwardForce + (forwardForce * Time.deltaTime);//Time.deltaTimeを掛けることで、フレームレートで影響を出さない。
     }
 
     protected void StartEnemySetting()
     {
-        //findGameManager = GameObject.FindWithTag("GameManager");
+        //このブロックの中どういう処理をやっているのか、簡単に説明を残してください
         findSoundManager = GameObject.FindWithTag("SoundManager");
         findBattleManager = GameObject.FindWithTag("BattleManager");
         target = GameObject.FindWithTag("Player");
 
-        //gameManager = findGameManager.GetComponent<GameManager>();
         battleManager = findBattleManager.GetComponent<BattleManager>();
         soundManager = findSoundManager.GetComponent<SoundManager>();
-        plaSta = target.GetComponent<Player_Status_Controller>();
+        playerStatCon = target.GetComponent<Player_Status_Controller>();
         myAgent = GetComponent<NavMeshAgent>();
-        animCon = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
 
-        defaltAgentSpeed = myAgent.speed;
-        forwardForce = forwardForce + (forwardForce * Time.deltaTime);//Time.deltaTimeを掛けることで、フレームレートで影響を出さない。
+        defaultAgentSpeed = myAgent.speed;
+        forwardForce = forwardForce + (forwardForce * Time.deltaTime);　//Time.deltaTimeを掛けることで、フレームレートで影響を出さない。
 
     }
 
 
-    // Update is called once per frame
     void Update()
     { 
         if (enemyDie) return;
 
         myAgent.SetDestination(target.transform.position);
 
-        var targetPos = target.transform.position;//ターゲットのポジション
+        var targetPos = target.transform.position;　//ターゲットのポジション
 
         var enemyPos = this.transform.position;
 
@@ -177,7 +152,7 @@ public class Enemy : MonoBehaviour
         else if(stopping == false)
         {
             actionType = ActionType.Move;
-            myAgent.speed = defaltAgentSpeed;
+            myAgent.speed = defaultAgentSpeed;
         }
 
         if (enemyHp <= 0)
@@ -189,7 +164,7 @@ public class Enemy : MonoBehaviour
         { 
         case ActionType.Move:
 
-                if (AttackCollider.enabled == true)
+                if (attackCollider.enabled == true)
                 {
                     OffEnemyAttack();
                 }
@@ -204,7 +179,7 @@ public class Enemy : MonoBehaviour
                 }
                 else
                 { 
-                    animCon.SetTrigger("EnemyAttack");
+                    animator.SetTrigger("EnemyAttack");
                     
                   
 
@@ -233,16 +208,12 @@ public class Enemy : MonoBehaviour
 
         if (actionType == ActionType.Move)
         {
-            animCon.SetBool("Move", true);
+            animator.SetBool("Move", true);
         }
         else
         {
-            animCon.SetBool("Move", false);
-        }
-
-      
-        
-       
+            animator.SetBool("Move", false);
+        }  
     }
 
     private void OnTriggerEnter(Collider other)
@@ -253,7 +224,7 @@ public class Enemy : MonoBehaviour
 
             if (enemyHitBarrierShield > 0)
             {
-                animCon.SetFloat("Shield", enemyHitBarrierShield);
+                animator.SetFloat("Shield", enemyHitBarrierShield);
             }
         }
         
@@ -261,24 +232,25 @@ public class Enemy : MonoBehaviour
 
     public void OnEnemyAttack()
     { 
-        AttackCollider.enabled = true;
+        attackCollider.enabled = true;
     }
 
     public void OffEnemyAttack()
     {
-        AttackCollider.enabled = false;
+        attackCollider.enabled = false;
     }
 
     public void OnEnemyHit()
     {
-            enemyDamage = battleManager.DamegeCalculation(enemyDefence,plaSta.PlayerAttackPower);//ダメージの計算結果をダメージ変数に代入。
+            enemyDamage = battleManager.DamegeCalculation(enemyDefence,playerStatCon.PlayerAttackPower);//ダメージの計算結果をダメージ変数に代入。
 
             enemyHp -= enemyDamage;//HP - ダメージ
 
-            battleManager.DamageText(enemyThisCollider, enemyDamage,damageUIPos);//ダメージの表示。
+            battleManager.DamageText(enemyCollider, enemyDamage,damageUIPos);//ダメージの表示。
 
             battleManager.Enemy_Hit_Effect(gameObject);
 
+            //マジックナンバーを避けるために、変数に置き換えることを検討してください・・
             soundManager.OneShot_Player_Sound(8);
 
             battleManager.Enemy_Hit_Vibration();
@@ -291,10 +263,9 @@ public class Enemy : MonoBehaviour
 
         StartCoroutine(HittingFalse());
 
-        //Invoke("HittingFalse",0.2f);
-
         IEnumerator HittingFalse()
         {
+            //0.2f秒後延長 -> これでもいいが、変数化をおすすめします
             yield return new WaitForSeconds(0.2f);
 
             hitting = false;
@@ -315,17 +286,18 @@ public class Enemy : MonoBehaviour
 
             stopping = true;//ヒット中
 
-            if (AttackCollider.enabled == true)
+            if (attackCollider.enabled == true)
             {
                 OffEnemyAttack();
             }
 
-            animCon.SetTrigger("Hit");
+            animator.SetTrigger("Hit");
 
             actionType = ActionType.Stop;
 
             StopCoolSet(setStopCoolTime);
 
+            //マジックナンバー
             Invoke("kinematicTrue", 0.2f);
         }   
     }
@@ -334,13 +306,12 @@ public class Enemy : MonoBehaviour
     {
         myAgent.isStopped = true;
 
-        //plasta.PlayerExp += getExp;
 
         battleManager.GetExp(target.GetComponent<CharacterController>(),getExp);
 
         OffCollider(); 
 
-        animCon.SetBool("Die",true);
+        animator.SetBool("Die",true);
 
         StartCoroutine(EnemyDieEffectAndDestroy());
 
@@ -359,41 +330,44 @@ public class Enemy : MonoBehaviour
         }
     }
 
-   
-
     private void OffCollider()
     {
-        enemyThisCollider.enabled = false;
+        enemyCollider.enabled = false;
 
-        enemyThisTriggerCollider.enabled = false;
+        enemyTriggerCollider.enabled = false;
 
-        AttackCollider.enabled = false;
+        attackCollider.enabled = false;
 
     }
 
-    //void HittingFalse()
-    //{ 
-    
-    //}
-    
-    void kinematicTrue()
+    /// <summary>
+    /// //説明書いて
+    /// </summary>
+    void KinematicTrue()
     {
         rb.isKinematic = true;
     }
 
 
+    /// <summary>
+    /// //説明書いて
+    /// </summary>
     private void EnemyKnockBack()
     {
         Vector3 vec = transform.forward * forwardForce;
         rb.AddForce(vec, ForceMode.Impulse);
     }
 
+    /// <summary>
+    /// //説明書いて
+    /// </summary>
+    /// <param name="SetCool"></param>
     private void StopCoolSet(float SetCool)
     {
 
         if (stopCoolTime != SetCool)
         {
             stopCoolTime = SetCool;
-        } 
+        }
     }
 }

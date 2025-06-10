@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// プレイヤーのステータスを管理するクラスです。
 /// </summary>
-public class Player_Status_Controller : MonoBehaviour
+public class PlayerStatusController : MonoBehaviour
 {
     [SerializeField,Header("レベル")]
     private int playerLevel = 1;
@@ -21,12 +21,13 @@ public class Player_Status_Controller : MonoBehaviour
     [SerializeField, Header("防御力")]
     private int playerDefance = 1;
 
-    private HealthBarScript plaHealth;
+    private HealthBarScript playerHealthBarScript;
+
     [SerializeField]
     private GameObject healthBar;
 
     [SerializeField] 
-    private StatusDate statusDate;
+    private StatusDate statusData;
 
 
     //---プロパティ---//
@@ -38,60 +39,48 @@ public class Player_Status_Controller : MonoBehaviour
     public int LivePlayerHP { get => livePlayerHP; set => livePlayerHP = value; }
     public GameObject HealthBar { get => healthBar; set => healthBar = value; }
   
-
-
-    // Start is called before the first frame update
     void Start()
     {
-        //if (playerLevel == StatusDate.D_PlayerLevel) return;
 
-        playerLevel = statusDate.D_PlayerLevel;
+        playerLevel = statusData.D_PlayerLevel;
 
-        playerExp = statusDate.D_PlayerExp;
+        playerExp = statusData.D_PlayerExp;
 
-        playerHP = statusDate.D_PlayerHP;
+        playerHP = statusData.D_PlayerHP;
 
-        playerAttackPower = statusDate.D_PlayerAttackPower;
+        playerAttackPower = statusData.D_PlayerAttackPower;
 
-        playerDefance = statusDate.D_PlayerDefance;
+        playerDefance = statusData.D_PlayerDefance;
 
-        livePlayerHP = statusDate.D_LivePlayerHP;
+        livePlayerHP = statusData.D_LivePlayerHP;
 
-        plaHealth = healthBar.GetComponent<HealthBarScript>();
+        playerHealthBarScript = healthBar.GetComponent<HealthBarScript>();
 
-        plaHealth.SetMaxHealth(PlayerHP);
+        playerHealthBarScript.SetMaxHealth(PlayerHP);
 
     }
 
-    // Update is called once per frame
-    //void Update()
-    //{
-      
-        
-      
-    //}
-
+   
     /// <summary>
     /// 被ダメージ時やレベルアップ時などで値を更新するメソッド。HPは0以下にはならないように制御しています。
     /// </summary>
     public void SetLiveHP()
     {
-        if (plaHealth != null){
+        if (playerHealthBarScript != null){
 
-            plaHealth.SetHealth(livePlayerHP);
+            playerHealthBarScript.SetHealth(livePlayerHP);
 
 
             if (livePlayerHP < 0)
             {
                 livePlayerHP = 0;
 
-                plaHealth.SetHealth(livePlayerHP);
+                playerHealthBarScript.SetHealth(livePlayerHP);
 
-                plaHealth.HealthDeath();
+                playerHealthBarScript.HealthDeath();
 
             }
         }
-
        
     }
 }

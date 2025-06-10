@@ -6,12 +6,14 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+
 /// <summary>
 /// タイトルシーンでのイベントを管理するクラスです。
 /// </summary>
 public class TitleManager : GameManager
 {
     private SoundManager soundManager;
+
     [SerializeField]
     private GameObject findSoundManager;
 
@@ -25,13 +27,9 @@ public class TitleManager : GameManager
 
     private List<GameObject> selectBackButton = new List<GameObject>();
 
-   
-    //private List<ButtonController> buttonConList = new List<ButtonController>();
 
     [SerializeField]
-    private PlayerInput plain;//インプットシステム
-    //[SerializeField]
-    //private GameObject findpla;
+    private PlayerInput playerInput; //インプットシステム
 
     [SerializeField]
     private GameObject titleTransition;
@@ -40,15 +38,11 @@ public class TitleManager : GameManager
     private GameObject loadSceneObject;
 
     [SerializeField] 
-    private GameObject eveSys;
+    private GameObject eveSys; //?? これ何用？ 名前は役割が分かるように
 
-    //private SoundManager soundManager;
-
-    //[SerializeField]
-    //private GameObject findSoundManager;
 
     [SerializeField]
-    private FlagManagementData gameData;
+    private FlagManagementData flagManagementData; //他のところと統一した方がいい
 
     [SerializeField]
     private PlayerTransformData playerTransformData;
@@ -58,12 +52,12 @@ public class TitleManager : GameManager
     private string loadSceneName;
 
     [SerializeField]
-    private PlayableDirector saveAdvisMassage;
+    private PlayableDirector saveAdviseMassage; //セーブアドバイスのタイムライン　→　合っている？
 
     private DateSaveUIController dateSaveUIController;
 
     [SerializeField,Header("dateSaveUIControllerの参照オブジェクト")]
-    private GameObject findDSUCon;
+    private GameObject findDSUCon; //説明書いて
 
     //デバック用
     [SerializeField,Header("デバック用(好きなシーンに移動)")]
@@ -72,21 +66,17 @@ public class TitleManager : GameManager
     private List<string> debugLoadSceneNameList = new List<string>();
     [SerializeField]
     private int sceneNumber;
-    //
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    
+        void Start()
     {
         titleTransition.SetActive(true);
 
-        plain = findPla.GetComponent<PlayerInput>();
+        playerInput = findPla.GetComponent<PlayerInput>();
 
         buttonSelector = GetComponent<ButtonSelector>();
 
         soundManager = findSoundManager.GetComponent<SoundManager>();
 
-        //gameObject.GetComponent<AudioSource>().volume = settingData.SoundVolum;
-        //soundManager = findSoundManager.GetComponent<SoundManager>();
 
         dateSaveUIController = findDSUCon.GetComponent<DateSaveUIController>();
 
@@ -101,6 +91,7 @@ public class TitleManager : GameManager
         {
             switch (sceneNumber)
             {
+                //数字ではなく、enumを使ってください
 
                 case 0:
                     loadSceneName = debugLoadSceneNameList[0];
@@ -131,27 +122,6 @@ public class TitleManager : GameManager
 
     }
 
-    //void Update()
-    //{
-    //    GetSelectButtonName(0);
-
-    //    GetSelectButtonName(1);
-
-    //    GetSelectButtonName(2);
-
-    //    GetSelectButtonName(3);
-
-    //}
-
-    //private void GetSelectButtonName(int num)
-    //{
-    //    if (buttonConList[num].EventSystem.currentSelectedGameObject.name != null && buttonConList[num].EventSystem.currentSelectedGameObject.name == selectButton[num].name)
-    //    {
-    //        selectButtonName = buttonConList[num].EventSystem.currentSelectedGameObject.name;
-    //    }
-
-    //}
-
  　/// <summary>
    ///シグナルで使用。タイトル演出の制御用。 
    /// </summary>
@@ -171,6 +141,7 @@ public class TitleManager : GameManager
 
         switch (selectButtonName)
         {
+            //titlePlayablesの数字をenumなどで管理した方がいいです。
             case "最初からボタン":
 
                 titlePlayables[0].Play();
@@ -198,12 +169,11 @@ public class TitleManager : GameManager
       
     }
     /// <summary>
-    /// シグナルで使用。選択されたボタンをに応じたタイムラインの再生を止めるメソッドです。。
+    /// シグナルで使用。選択されたボタンをに応じたタイムラインの再生を止めるメソッドです。
     /// </summary>
-    public void BeggingPause()
+    public void BeggingPause()  //-> この名前は合っていますか？一時的止めることを
     {
-
-      
+     
 
         switch (selectButtonName)
         {
@@ -316,7 +286,7 @@ public class TitleManager : GameManager
     /// </summary>
     public void PlayStrart()
     {
-        gameData.SceneName = loadSceneName;
+        flagManagementData.SceneName = loadSceneName;
           
         soundManager.MusicManager.GetComponent<AudioSource>().Stop();
         soundManager.LoadingStart_Sound();

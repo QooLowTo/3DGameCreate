@@ -13,7 +13,7 @@ using UnityEngine.InputSystem;
 public class TutorialIvent : MonoBehaviour
 {
     [SerializeField]
-    private GameObject decisionCsr;
+    private GameObject decisionCursor; //
 
     [SerializeField]
     private GameObject playerWeapon;
@@ -71,7 +71,7 @@ public class TutorialIvent : MonoBehaviour
         //findGameManager = GameObject.FindWithTag("GameManager");
         
 
-        nav = navObj.GetComponent<NavMeshSurface>();
+        nav = navObj.GetComponent<NavMeshSurface>(); 
         plain = findPla.GetComponent<PlayerInput>();
         flowChart = findFlow.GetComponent<Flowchart>();
 
@@ -102,7 +102,7 @@ public class TutorialIvent : MonoBehaviour
     {
         if (iventing == false)
         { 
-          decisionCsr.SetActive(true);
+          decisionCursor.SetActive(true);
         }
       
 
@@ -111,7 +111,7 @@ public class TutorialIvent : MonoBehaviour
 
             ChageAction();
 
-            decisionCsr.SetActive(false);
+            decisionCursor.SetActive(false);
 
             iventing = true;
 
@@ -142,7 +142,7 @@ public class TutorialIvent : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            decisionCsr.SetActive(false);
+            decisionCursor.SetActive(false);
 
         }
     }

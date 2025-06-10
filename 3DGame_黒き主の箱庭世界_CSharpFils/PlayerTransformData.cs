@@ -11,7 +11,6 @@ public class PlayerTransformData : ScriptableObject
     [SerializeField]
     private Vector3 loadTransform;
 
-   
 
     [SerializeField]
     private Quaternion loadRotate;

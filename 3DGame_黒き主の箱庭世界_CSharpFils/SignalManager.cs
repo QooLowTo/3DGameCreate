@@ -6,12 +6,13 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+
 /// <summary>
 /// タイムラインのシグナルで用いる様々なメソッドを管理するクラスです。
 /// </summary>
 public class SignalManager : GameManager
 {
-    private Player_UI_Controller plaUCon;
+    private Player_UI_Controller playerUICon;
 
     private PlayerInput playerInput;
 
@@ -60,7 +61,6 @@ public class SignalManager : GameManager
     [SerializeField]
     private GameObject findDataSave;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
@@ -69,7 +69,7 @@ public class SignalManager : GameManager
 
         if (findPla != null)
         {
-            plaUCon = findPla.GetComponent<Player_UI_Controller>();
+            playerUICon = findPla.GetComponent<Player_UI_Controller>();
 
             playerInput = findPla.GetComponent<PlayerInput>();
         }
@@ -118,15 +118,15 @@ public class SignalManager : GameManager
 
         openUIPlayable.Pause();
 
-        plaUCon.CancelStop = false;
+        playerUICon.CancelStop = false;
     }
 
     public void SignalMenuClose()
     {
         //plaUCon.MenuClose();
-        plaUCon.UiPanel.SetActive(false);
+        playerUICon.UiPanel.SetActive(false);
 
-        plaUCon.CineVir.enabled = true;
+        playerUICon.CineVir.enabled = true;
 
         playerInput.SwitchCurrentActionMap("Player");
 

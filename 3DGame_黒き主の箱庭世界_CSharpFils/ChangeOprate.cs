@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+
 /// <summary>
 /// 操作説明にて、キーボード操作かコントローラー操作かを切り替えて表示させれるようにするクラスです。
 /// </summary>
@@ -13,14 +14,11 @@ public class ChangeOprate : UIManager
     [SerializeField]
     private List<TextMeshProUGUI> changeText = new List<TextMeshProUGUI>();
 
-    //private UIManager uiManager;
-
-    //private GameObject findUiManager;
 
     bool oprateChange = false;
 
     Color offColor;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+  
     void Start()
     {
         StartUISetting();
@@ -28,7 +26,6 @@ public class ChangeOprate : UIManager
         offColor = changeText[1].color;
     }
 
-    // Update is called once per frame
     
     public void ChangeOp()
     {

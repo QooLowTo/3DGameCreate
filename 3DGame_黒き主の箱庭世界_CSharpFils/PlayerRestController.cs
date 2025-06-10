@@ -5,10 +5,11 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
+
 /// <summary>
 /// バトル外でのプレイヤーの動きを制御するクラスです。
 /// </summary>
-public class Player_Rest_Controller : Player
+public class PlayerRestController : Player
 {
     private HomeMapManager homeMapManager;
     [SerializeField]
@@ -30,33 +31,7 @@ public class Player_Rest_Controller : Player
 
         StartPlayerSet();
 
-        StartCoroutine(Starting());
-
-        //charaCon.enabled = false;
-
-        //if (flagmentData.PositionLoad)
-        //{
-        //    transform.position = playerTransformData.LoadTransform;
-        //    flagmentData.PositionLoad = false;
-        //}
-        //else
-        //{
-        //    transform.position = startPos;
-        //}
-
-        //if (flagmentData.RotateLoad)
-        //{
-        //    transform.rotation = playerTransformData.LoadRotate;
-        //    flagmentData.RotateLoad = false;
-        //}
-        //else
-        //{
-        //    transform.rotation = startRotate;
-        //}
-
-
-
-
+        StartCoroutine(Starting());   
 
     }
 

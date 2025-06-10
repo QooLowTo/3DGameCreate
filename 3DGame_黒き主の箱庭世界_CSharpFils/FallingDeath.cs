@@ -6,7 +6,7 @@ using UnityEngine.Playables;
 /// </summary>
 public class FallingDeath : MonoBehaviour
 {
-    private Player_Battle_Controller playerCon;
+    private Player_Battle_Controller playerBattleCon;
 
     [SerializeField]
     private GameObject targetPlayer;
@@ -28,25 +28,24 @@ public class FallingDeath : MonoBehaviour
    
     public Vector3 ReturnPos { get => returnPos; set => returnPos = value; }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       playerCon = targetPlayer.GetComponent<Player_Battle_Controller>();
+       playerBattleCon = targetPlayer.GetComponent<Player_Battle_Controller>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (targetPlayer.transform.position.y <= deathPos.y&& !onFallingDeath)
-        { 
-         onFallingDeath = true;
+        //ブロックごとに説明を書いて
+        if (targetPlayer.transform.position.y <= deathPos.y && !onFallingDeath)
+        {
+            onFallingDeath = true;
             onFadeOut = true;
 
             if (!onDeath)
-            { 
-            targetPlayer.GetComponent<CharacterController>().enabled = false;
+            {
+                targetPlayer.GetComponent<CharacterController>().enabled = false;
             }
-            
+
         }
 
         if (!onFallingDeath) return;
@@ -64,22 +63,15 @@ public class FallingDeath : MonoBehaviour
        
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.gameObject.tag == "Player")
-    //    {
-    //        StartCoroutine(FadeOut());
-    //    }
-    //}
-
     IEnumerator FallFadeOut()//復帰アリ
     { 
  
+            
     gameObject.GetComponent<PlayableDirector>().Play();
-    yield return new WaitForSeconds(2);
-        playerCon.AllCancel();
-        playerCon.AnimCon.SetBool("Landing", true);
-    playerCon.transform.position = returnPos;
+    yield return new WaitForSeconds(2f);　//マジックナンバー！！変数化してください
+        playerBattleCon.AllCancel();
+        playerBattleCon.AnimCon.SetBool("Landing", true);
+    playerBattleCon.transform.position = returnPos;
         targetPlayer.GetComponent<CharacterController>().enabled = true;
         onFallingDeath = false ;
     }
@@ -87,8 +79,8 @@ public class FallingDeath : MonoBehaviour
     IEnumerator FallFadeOutDeath()//復帰ナシ、ゲームオーバー
     {
         gameObject.GetComponent<PlayableDirector>().Play();
-        yield return new WaitForSeconds(2f);
-        playerCon.FallingDie();
+        yield return new WaitForSeconds(2f);　//マジックナンバー！！変数化してください
+        playerBattleCon.FallingDie();
        
     }
 }

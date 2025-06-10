@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using static UnityEngine.Rendering.HighDefinition.CameraSettings;
+
 /// <summary>
 /// プレイヤーの動きを制御するクラスの親クラスです。
 /// </summary>
@@ -14,7 +15,7 @@ public class Player : MonoBehaviour
     protected float playerSpeed = 5f;//キャラクターのスピード
 
     [SerializeField, Header("プレイヤーのジャンプ力")]
-    protected float jumpForse = 5f;//キャラクターのジャンプ力
+    protected float jumpForce = 5f;//キャラクターのジャンプ力
     protected float jumpActioningForce = 1f;//特定のアクションによるジャンプ補正力
 
     [SerializeField, Header("キャラクターの向きの回転速度")]
@@ -55,7 +56,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     protected PlayerTransformData playerTransformData;
     [SerializeField]
-    protected FlagManagementData flagmentData;
+    protected FlagManagementData flagManagementData;
 
     protected Player_Status_Controller plasta;
 
@@ -64,7 +65,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     protected GameObject findSoundManager;
 
-    protected PlayerInput plaIn;//インプットシステム
+    protected PlayerInput playerInput;//インプットシステム
 
     protected CharacterController charaCon;//キャラクターコントローラー
 
@@ -78,11 +79,11 @@ public class Player : MonoBehaviour
 
     protected bool starting = true;//開幕ジャンプ中アニメ封じ用
 
-    private bool isChanegeAction = false;//行動中判定
+    private bool isChangeAction = false;//行動中判定
 
-    protected bool isJumpping = false;//ジャンプ中判定
+    protected bool isJumping = false;//ジャンプ中判定
 
-    private bool onJumpping = false;//二段ジャンプ中判定
+    private bool onJumping = false;//二段ジャンプ中判定
 
     protected bool falling = false;//空中判定
 
@@ -112,60 +113,24 @@ public class Player : MonoBehaviour
     public bool GameOver { get => gameOver; set => gameOver = value; }
     public CharacterController CharaCon { get => charaCon; set => charaCon = value; }
     public Animator AnimCon { get => animCon; set => animCon = value; }
-    public SoundManager SoundManager { get => soundManager; set => soundManager = value; }
-    public PlayerInput PlaIn { get => plaIn; set => plaIn = value; }
+    public SoundManager SoundManagerProperty { get => soundManager; set => soundManager = value; }
+    public PlayerInput PlayerInputProperty { get => playerInput; set => playerInput = value; }
  
-
-
-
-
-
-    //private void FixedUpdate()
-    //{
-    //    Debug.Log("s");
-
-    //    //animCon.speed = animSpeed;
-
-    //    if (landing && OnGroundLayer(false)){
-
-    //        if (starting || hitting) return;
-
-    //        Fall();
-    //    }
-
-    //    if (!landing && OnGroundLayer(true))
-    //    {
-
-    //        landing = true;
-
-    //        if (jumpAttackingFall)
-    //        {
-
-    //            AttackGrounded();
-
-    //        }
-    //        else
-    //        {
-
-    //            Grounded();
-    //        }
-    //    }
-    //}
 
     protected void StartPlayerSet()
     {
-        plaIn.enabled = false;
+        playerInput.enabled = false;
 
         charaCon.enabled = false;
 
         Debug.Log("や");
 
-        if (flagmentData.PositionLoad)
+        if (flagManagementData.PositionLoad)
         {
 
             transform.position = playerTransformData.LoadTransform;
 
-            flagmentData.PositionLoad = false;
+            flagManagementData.PositionLoad = false;
 
         }
         else
@@ -177,12 +142,12 @@ public class Player : MonoBehaviour
 
 
 
-        if (flagmentData.RotateLoad)
+        if (flagManagementData.RotateLoad)
         {
 
             transform.rotation = playerTransformData.LoadRotate;
 
-            flagmentData.RotateLoad = false;
+            flagManagementData.RotateLoad = false;
 
         }
         else
@@ -212,10 +177,6 @@ public class Player : MonoBehaviour
         moveInputAbs = moveInputAbs_x + moveInputAbs_y;
 
         animCon.SetFloat("MoveInput", moveInputAbs);
-
-
-       
-        //animCon.SetFloat("MoveInput", 0);
 
     }
 
@@ -275,8 +236,7 @@ public class Player : MonoBehaviour
     protected void GravityLoad()
     {
         if (OnGroundLayer(false) && playerVelocity > -10f)
-        {
-            //if (playerVelocity <= -10f) return;
+        {           
 
             playerVelocity += (gravityValue * jumpActioningForce) * Time.deltaTime;
         }
@@ -330,11 +290,6 @@ public class Player : MonoBehaviour
 
                 i++;
             }
-
-            //if (groundPlayerList[0] || groundPlayerList[1] || groundPlayerList[2])
-            //{
-            //    result = true;
-            //}
         }
         else if (!onGround)
         {
@@ -357,11 +312,6 @@ public class Player : MonoBehaviour
             { 
              result = true;
             }
-
-            //if (!groundPlayerList[0] && !groundPlayerList[1] && !groundPlayerList[2])
-            //{
-            //    result = true;
-            //}
         }
 
         return result;
@@ -409,7 +359,6 @@ public class Player : MonoBehaviour
     }
 
    
-
     public void OnMove(InputAction.CallbackContext context)
     {
 
@@ -425,20 +374,20 @@ public class Player : MonoBehaviour
 
       
 
-        if (!isJumpping)
+        if (!isJumping)
         {
             Debug.Log("s1");
 
             animCon.SetBool("JumpAnim", true);
 
             //animCon.SetBool("Landing", true);
-            playerVelocity += jumpForse;
+            playerVelocity += jumpForce;
 
             soundManager.OneShot_Player_Sound(2);//ジャンプサウンド
 
-            isJumpping = true;
+            isJumping = true;
         }
-        else if (isJumpping && onJumpping)
+        else if (isJumping && onJumping)
         {
             Debug.Log("s2");
 
@@ -446,15 +395,12 @@ public class Player : MonoBehaviour
 
             animCon.SetBool("OnJump", true);
 
-            playerVelocity += jumpForse % 80;
+            playerVelocity += jumpForce % 80;
 
             soundManager.OneShot_Player_Sound(3);//二段ジャンプサウンド
 
-            onJumpping = false;
+            onJumping = false;
         }
-
-       
-
 
     }
 
@@ -490,19 +436,19 @@ public class Player : MonoBehaviour
     //----------------------ジャンプアニメーションイベントで制御----------------------//
     public void OnJumpTrue()//アニメーションイベントで制御
     {
-        onJumpping = true;
+        onJumping = true;
     }
 
     public void isJumpFalse()//アニメーションイベントで制御
     {
-        isChanegeAction = false;
+        isChangeAction = false;
         animCon.SetBool("JumpAnim", false);
         //isJumpping = true; 
     }
 
     public void OnJumpFalse()//アニメーションイベントで制御
     {
-        isChanegeAction = false;
+        isChangeAction = false;
         animCon.SetBool("OnJump", false);
     }
 
@@ -511,22 +457,15 @@ public class Player : MonoBehaviour
     //----------------------着地アニメーションイベントで制御----------------------//
     public void JumpBoolFalse()
     {
-        isJumpping = false;
-        onJumpping = false;
+        isJumping = false;
+        onJumping = false;
     }
 
-    //public void LandingSound()
-    //{
-    //    gameManager.OneShotPlayerSound(4);
-    //}
     public void Landing()
     {
-        //isJumpping = false;
-        //onJumpping = false;
 
         if (playerVelocity != 0)
-        {//playerVelocityの初期化
-
+        {
             playerVelocity = 0;
             Debug.Log("s0");
         }
@@ -535,6 +474,4 @@ public class Player : MonoBehaviour
 
         animCon.SetBool("Landing", false);
     }
-
-    //--------------------------------------------------------------------------------//
 }

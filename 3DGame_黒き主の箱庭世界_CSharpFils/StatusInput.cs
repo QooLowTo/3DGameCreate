@@ -11,25 +11,18 @@ public class StatusInput : UIManager
     [SerializeField]
     private List<TextMeshProUGUI> statusList = new List<TextMeshProUGUI>();
 
-    //private UIManager uiManager;
-
-    //private GameObject findUiManager;
-
-    //[SerializeField]
-    //private StatusDate statusDate;
-    //[SerializeField]
-    //private ExpManager expManager;
-    // Start is called before the first frame update
     void Start()
     {
        
         StartUISetting();
     }
 
-    // Update is called once per frame
+    //これをゲーム内に常に呼んでいるの？？パフォーマンス的によくないから
+    //定期的に（１秒ごと、２秒ごと）に更新するようにした方がいいかも
     void Update()
     {
         
+
         statusList[0].text = "<size=90>L</size>v.<size=100>" + plaSCon.PlayerLevel.ToString();
 
         statusList[1].text = "<size=75>H</size>P:<size=80>" + plaSCon.PlayerHP.ToString();

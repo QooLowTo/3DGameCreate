@@ -9,7 +9,7 @@ using UnityEngine.Playables;
 /// </summary>
 public class FungusEventManager : GameManager
 {
-    private Player_Tutorial_Controller plaTCon;
+    private Player_Tutorial_Controller playerTutorialCon;
 
     private SoundManager soundManager;
 
@@ -22,8 +22,6 @@ public class FungusEventManager : GameManager
     private GameObject findBattleManager;
 
     private Flowchart tutorialFlow;
-  
-    //private GameObject findTutorialFlow;
 
     [SerializeField]
     private FlagManagementData flagManagementDate;
@@ -60,25 +58,20 @@ public class FungusEventManager : GameManager
     public Flowchart TutorialFlow { get => tutorialFlow; set => tutorialFlow = value; }
  
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         soundManager = findSoundManager.GetComponent<SoundManager>();
 
         battleManager = findBattleManager.GetComponent<BattleManager>();
 
-        //adios = gameObject.GetComponent<AudioSource>();
-
-        //gameObject.GetComponent<AudioSource>().volume = settingData.SoundVolum;
-
         tutorialFlow = gameObject.GetComponent<Flowchart>();
 
-        plaTCon = findPla.GetComponent<Player_Tutorial_Controller>();
+        playerTutorialCon = findPla.GetComponent<Player_Tutorial_Controller>();
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
+        //このブロック内のマジックナンバーすべて変数化、もしくはenum化してください
         switch (flagManagementDate.KillCount)
         {
             case 2:
@@ -117,37 +110,32 @@ public class FungusEventManager : GameManager
         }
     }
 
+/// <summary>
+/// 
+/// </summary>
     public void OnTutorialInputOn()
     {
-        plaTCon.PlaIn.enabled = true;
+        playerTutorialCon.PlaIn.enabled = true;
     }
 
     public void OntutorialStart()
     {
-        plaTCon.CharaCon.enabled = true;
+        playerTutorialCon.CharaCon.enabled = true;
 
-        plaTCon.GameStart = true;
+        playerTutorialCon.GameStart = true;
     }
 
 
-    //public void Tutorial_Decision()
-    //{
-    //    soundManager.OneShotDecisionSound();
-    //}
-
-    //public void Tutorial_CancelSound()
-    //{
-    //    soundManager.OneShotDecisionSound();
-    //}
+   
 
     public void ChageActionUI()
     {
-        plaTCon.PlaIn.SwitchCurrentActionMap("UI");
+        playerTutorialCon.PlaIn.SwitchCurrentActionMap("UI");
     }
 
     public void ChageActionPlayer()
     {
-        plaTCon.PlaIn.SwitchCurrentActionMap("Player");
+        playerTutorialCon.PlaIn.SwitchCurrentActionMap("Player");
     }
 
     public void CameraTutorialOpen()
