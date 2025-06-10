@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 /// <summary>
 /// キャンバスの参照解像度や子のImage等のRectTransformをプレイする機種の画面比率に応じて動的に制御するクラスです。
 /// </summary>
@@ -15,7 +16,7 @@ public class ChangeCanvasSize : MonoBehaviour
 
     [SerializeField, Header("背景画像のRectTransformList")]
     private List<RectTransform> rectTransformList = new List<RectTransform>();
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         var width = Screen.width;
@@ -28,7 +29,6 @@ public class ChangeCanvasSize : MonoBehaviour
         SetRectTransform(newArea);
     }
 
-    // Update is called once per frame
     /// <summary>
     /// キャンバスの新しい参照解像度を設定するメソッドです。
     /// </summary>

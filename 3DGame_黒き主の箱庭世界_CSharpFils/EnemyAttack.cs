@@ -13,68 +13,48 @@ public class EnemyAttack : MonoBehaviour
     private int enemyAttackPower;
 
   
-    private Player_Battle_Controller placon;
-
+    private Player_Battle_Controller playerBattleCon;
 
     private GameObject target;
-    private Player_Status_Controller Plasta;
+    private Player_Status_Controller playerStatCon;
 
     private BattleManager battleManager;
-    ////private GameManager gameManager;
     private GameObject findManager;
-    //private GameObject findPla;
 
     private bool attaking = false;
-    // Start is called before the first frame update
+   
     void Start()
     {
-
-     
 
         findManager = GameObject.FindWithTag("BattleManager");
         target = GameObject.FindWithTag("Player");
 
-
-        placon = target.GetComponent<Player_Battle_Controller>();
-        Plasta = target.GetComponent<Player_Status_Controller>();
-
-        //gameManager = findManager.GetComponent<GameManager>();
+        playerBattleCon = target.GetComponent<Player_Battle_Controller>();
+        playerStatCon = target.GetComponent<Player_Status_Controller>();
 
         battleManager = findManager.GetComponent<BattleManager>();
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// //説明書いて
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject != target || placon.Avoidancing || placon.Hitting || placon.IsDown || attaking) return;
-        
-            
-            EnemyAttackHit();
-        
+        if (other.gameObject != target || playerBattleCon.Avoidancing || playerBattleCon.Hitting || playerBattleCon.IsDown || attaking) return;
+
+        EnemyAttackHit();
     }
 
+    /// <summary>
+    /// //説明書いて
+    /// </summary>
     private void EnemyAttackHit()
-    { 
-        playerHitDamage = battleManager.DamegeCalculation(Plasta.PlayerDefance,enemyAttackPower);
+    {
+        playerHitDamage = battleManager.DamegeCalculation(playerStatCon.PlayerDefance, enemyAttackPower);
 
-        placon.OnHit(playerHitDamage);
-        //Placon.AnimCon.SetTrigger("Hit");
-        //gameManager.OneShotPlayerSound(6);
-        
-        //Plasta.LivePlayerHP -= playerHitDamage;
-        //gameManager.DamageText(findPla.GetComponent<CharacterController>(),playerHitDamage,0.2f);
+        playerBattleCon.OnHit(playerHitDamage);
 
-        //attaking = true;
-        //Invoke("AttackingFalse", 0.2f);
-
-        //StartCoroutine(AttackingfFalse());
-
-        //IEnumerator AttackingfFalse()
-        //{
-
-        //    yield return new WaitForSeconds(0.2f);
-        //    attaking = false;
-        //}
     }
 
 }

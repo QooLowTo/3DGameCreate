@@ -9,19 +9,21 @@ using UnityEngine;
 public class ExpManager : ScriptableObject
 {
     [SerializeField] 
-    List<int> expTablesList = new List<int>();
+    List<int> expTablesList = new List<int>(); //説明書いて
 
     [SerializeField]
-    List<int> hpGrowthTableList = new List<int>();
+    List<int> hpGrowthTableList = new List<int>(); //説明書いて
 
     [SerializeField]
-    List<int> attackPGrowthTableList = new List<int>();
+    List<int> attackPGrowthTableList = new List<int>(); //説明書いて
 
     [SerializeField]
-    List<int> DefanceGrowthTableList = new List<int>();
+    List<int> DefenceGrowthTableList = new List<int>(); //説明書いて
 
+    //以下プロパティ
+    
     public List<int> ExpTablesList { get => expTablesList; set => expTablesList = value; }
     public List<int> HpGrowthTableList { get => hpGrowthTableList; set => hpGrowthTableList = value; }
     public List<int> AttackPGrowthTableList { get => attackPGrowthTableList; set => attackPGrowthTableList = value; }
-    public List<int> DefanceGrowthTableList1 { get => DefanceGrowthTableList; set => DefanceGrowthTableList = value; }
+    public List<int> DefanceGrowthTableList1 { get => DefenceGrowthTableList; set => DefenceGrowthTableList = value; }
 }

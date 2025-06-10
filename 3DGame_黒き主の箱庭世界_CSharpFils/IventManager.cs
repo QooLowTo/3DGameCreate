@@ -8,49 +8,60 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// Fungusを用いたイベントを管理するクラスです。
 /// </summary>
-public class IventManager : MonoBehaviour
+public class EventManager : MonoBehaviour
 {
    
     [SerializeField]
-    private PlayerInput plaIn;//インプットシステム
+    private PlayerInput playerInput; //インプットシステム
     [SerializeField]
-    private GameObject findPla;
+    private GameObject findPlayerObj;
 
     [SerializeField]
     private List<GameObject> objectList = new List<GameObject>();
 
     [SerializeField]
-    private Flowchart flocha;
-    private GameObject findflo;
+    private Flowchart flowchart;
+    private GameObject findFlowchartObj;
 
     [SerializeField]
     private Character character;
     [SerializeField]
-    private GameObject targetCharctor;
+    private GameObject targetCharacter;
 
     [SerializeField]
-    private FlagManagementData flagmentData;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private FlagManagementData flagManagementData;
+
     void Start()
     {
-        findflo = GameObject.FindWithTag("Fungus");
+        findFlowchartObj = GameObject.FindWithTag("Fungus");
 
-        plaIn = findPla.GetComponent<PlayerInput>();
-        flocha = findflo.GetComponent<Flowchart>();
+        playerInput = findPlayerObj.GetComponent<PlayerInput>();
+        flowchart = findFlowchartObj.GetComponent<Flowchart>();
         character = targetCharctor.GetComponent<Character>();
 
-        if (flagmentData.TutorialClear) return;
+        if (flagManagementData.TutorialClear) return;
 
-        flocha.SetBooleanVariable("tutorialClear", flagmentData.TutorialClear);
+        flowchart.SetBooleanVariable("tutorialClear", flagManagementData.TutorialClear);
 
         StartCoroutine(FirstDialog());
     }
 
+    /// <summary>
+    /// 説明書いて
+    /// </summary>
+    /// <returns></returns>
+
     IEnumerator FirstDialog()
     {
+        //マジックナンバー
         yield return new WaitForSeconds(3);
-        flocha.SendFungusMessage("Center");
+        flowchart.SendFungusMessage("Center");
     }
+
+    /// <summary>
+    /// 説明書いて
+    /// </summary>
+    /// <param name="listNum"></param>
     public void GameObjectTrue(int listNum)
     {
         objectList[listNum].SetActive(true);
@@ -61,23 +72,23 @@ public class IventManager : MonoBehaviour
         objectList[listNum].SetActive(false);
     }
 
-    public void ChageActionUI()
+    public void ChangeActionUI()
     {
-        plaIn.SwitchCurrentActionMap("UI");
+        playerInput.SwitchCurrentActionMap("UI");
     }
 
-    public void ChageActionPlayer()
+    public void ChangeActionPlayer()
     {
-        plaIn.SwitchCurrentActionMap("Player");
+        playerInput.SwitchCurrentActionMap("Player");
     } 
    
-    public void CharactorChangeName()
+    public void CharacterChangeName()
     {
         character.name = "創造主";
     } 
     public void HomeFlowBooleanTrue()
     {
-        flagmentData.TutorialClear = true;
+        flagManagementData.TutorialClear = true;
     }
 
 }

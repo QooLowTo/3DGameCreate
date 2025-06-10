@@ -14,93 +14,73 @@ using UnityEngine.Rendering;
 /// </summary>
 public  class BossGolem : Enemy
 {
-    //[SerializeField,Header("ボスの体力")] 
-    //private int bossHp = 500;
+
     [SerializeField,Header("ボスの現在の体力")]
     private int liveBossHP;
 
-    //[SerializeField,Header("ボスの防御力")]
-    //private int bossDefence;
+    private float bossSpeed; //説明書いて
 
-    //[SerializeField,Header("ボス撃破時の獲得経験値量")]
-    //private int getExp;
-
-    private float bossSpeed;
-
-    private float attackCool = 0.8f;
+    private float attackCool = 0.8f;　//説明書いて
 
     [SerializeField,Header("AttackCoolに返す値")]
     float returnAtttackcool = 4.0f;
 
-    private float bossAnimSpeed;
-
+    private float bossAnimSpeed;　//説明書いて
+　
     [SerializeField,Header("ターゲットとの距離判定の値")]
     private float forwardDistance;
 
     [SerializeField,Header("ボスのジャンプ力")]
     private float jumpForce = 100f;
 
-    //[SerializeField,Header("ボスの突進力")]
-    //private float forwardForce = 100f;
-
 
     private Vector3 directionToPlayer;//急接近、急後退用のベクトル取得
 
     private Vector3 fowardDirection;//directionToPlayerのAddForce用に使うベクトル(急接近)
 
-    private Vector3 BackDirection;//directionToPlayerのAddForce用に使うベクトル(急後退)
+    private Vector3 backDirection;//directionToPlayerのAddForce用に使うベクトル(急後退)
 
 
-    private int attakCount = 0;
+    private int attackCount = 0;　//説明書いて
 
  
 
     [SerializeField,Header("クールダウン時間の値")]
     private float coolDownTime = 7f;
 
-    private float setCoolDownTime;
+    private float setCoolDownTime;　//説明書いて
 
-    //private int hitDamage;
+    private Collider thisBossCollider;　//説明書いて
 
-    //private float damageUIPos = 2f;
-
-    private Collider thisBossCollider;
-
-    private BoxCollider hornAttackCollider;
+    private BoxCollider hornAttackCollider;　//説明書いて
  
-    private BoxCollider attackCollider;
+    private BoxCollider attackCollider;　//説明書いて
 
-    private SphereCollider impactCollider;
-
-    [SerializeField]
-    private GameObject findHornAttackColliderObj;
+    private SphereCollider impactCollider;　//説明書いて
 
     [SerializeField]
-    private GameObject findAttackColliderObj;
+    private GameObject findHornAttackColliderObj;　//説明書いて
 
     [SerializeField]
-    private GameObject findImpactColliderObj;
-
-    //private GameObject findGM;
-
-    //private GameObject findBattleManager;
-
-    //private GameObject target;
+    private GameObject findAttackColliderObj;　//説明書いて
 
     [SerializeField]
-    private GameObject escapeObject;
+    private GameObject findImpactColliderObj;　//説明書いて
 
     [SerializeField]
-    private GameObject findBossHPSlide;
+    private GameObject escapeObject;　//説明書いて
+
+    [SerializeField]
+    private GameObject findBossHPSlide;　//説明書いて
 
     [SerializeField] 
-    private float rayLength = 1f;
+    private float rayLength = 1f;　//説明書いて
 
     [SerializeField]
-    private float rayOffset;
+    private float rayOffset;　//説明書いて
 
     [SerializeField]
-    LayerMask groundLayers = default;
+    LayerMask groundLayers = default;　//説明書いて
 
     private bool hitting = false;//ダメージを受けるとON。多段ヒット防止用
 
@@ -114,23 +94,14 @@ public  class BossGolem : Enemy
 
     private bool bossDie = false;//ボスの死亡判定
 
-    //private Player_Status_Controller plasta;
+    private BossHealthBar bossHPSlide;　//説明書いて
 
-    private BossHealthBar bossHPSlide;
-
-    private GameManager gameManager;
-
-    //private BattleManager battleManager;
-
-    //private NavMeshAgent myAgent;
-
-    //private Animator animCon;//アニメーター
-
-    //private Rigidbody rb;
+    private GameManager gameManager;　//説明書いて
 
     [SerializeField]
-    private List<GameObject> bossEffects = new List<GameObject>();
+    private List<GameObject> bossEffects = new List<GameObject>();　//説明書いて
 
+    //プロパティ
     public float AttackCool { get => attackCool; set => attackCool = value; }
     public bool BossActionStart { get => bossActionStart; set => bossActionStart = value; }
     public bool BossAttacking { get => bossAttacking; set => bossAttacking = value; }
@@ -140,46 +111,29 @@ public  class BossGolem : Enemy
     public SphereCollider ImpactCollider { get => impactCollider; set => impactCollider = value; }
     
 
+    /// <summary>
+    /// ボスの行動を制御するための列挙型です。
+    /// </summary>
     private enum ActionType
-    { 
-      TowardOn,  
-      HornAttack,
-      CoolDown,
-      Wait,
-      Attack,
-      Jump,
-      Lading
+    {
+        TowardOn, //説明書いて。例：プレイヤーに向かう
+        HornAttack, //説明書いて。
+        CoolDown, //説明書いて。
+        Wait, //説明書いて。
+        Attack, //説明書いて。
+        Jump, //説明書いて。
+        Landing //説明書いて。
 
-    }ActionType actionType = ActionType.TowardOn;
+    }
+    ActionType actionType = ActionType.TowardOn; //説明書いて
 
    
-
-    // Start is called before the first frame update
     void Awake()
     {
+        //シンプルにこのブロック内にどういう処理をしているか説明書いてください。
         StartEnemySetting();
 
-        //target = GameObject.FindWithTag("Player");
-
-        //findGM = GameObject.FindWithTag("GameManager");
-
-        //findBattleManager = GameObject.FindWithTag("BattleManager");
-
-        //gameManager = findGM.GetComponent<GameManager>();
-
-        //battleManager = findBattleManager.GetComponent<BattleManager>();
-
-        //plasta = target.GetComponent<Player_Status_Controller>();
-
-        //animCon = GetComponent<Animator>();
-
-        //myAgent = GetComponent<NavMeshAgent>();
-
-        //rb = GetComponent<Rigidbody>();
-
         bossHPSlide = findBossHPSlide.GetComponent<BossHealthBar>();
-
-        //forwardForce = forwardForce + (forwardForce * Time.deltaTime);
 
         jumpForce = jumpForce + (jumpForce * Time.deltaTime);
 
@@ -190,7 +144,6 @@ public  class BossGolem : Enemy
         attackCollider = findAttackColliderObj.GetComponent<BoxCollider>();
 
         impactCollider = findImpactColliderObj.GetComponent<SphereCollider>();
-
 
 
         battleManager.BossBattle = true;
@@ -204,11 +157,10 @@ public  class BossGolem : Enemy
         thisBossCollider.enabled = false;
 
         StartCoroutine(BossActionStart());
-        //HornAttackCollider = GetComponent<BoxCollider>();
-        //attackcollider = GetComponent<BoxCollider>();
 
         IEnumerator BossActionStart()
         { 
+            //マジックナンバー発見！変数化するか、なぜ６秒なのか説明書いてください。
             yield return new WaitForSeconds(6);
 
             bossActionStart = false;
@@ -217,7 +169,6 @@ public  class BossGolem : Enemy
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (bossDie||bossActionStart) return;
@@ -226,25 +177,22 @@ public  class BossGolem : Enemy
 
         var targetPos = new Vector3(target.transform.position.x,0f,target.transform.position.z);//ターゲットのポジション
 
-        var BossPos = new Vector3(transform.position.x,0f,transform.position.z);
+        var bossPos = new Vector3(transform.position.x,0f,transform.position.z);
 
         var distanceToTarget = Vector3.Distance(this.transform.position, targetPos);//ターゲットとボスとの距離
 
         myAgent.speed = bossSpeed;
 
-        //directionToPlayer = (targetPos - BossPos).normalized;
 
-        //if (actionType != ActionType.CoolDown && thisBossCollider.enabled){
-            
-        //    thisBossCollider.enabled = false;
+        //ブロックの説明書いて！
+        if (distanceToTarget < forwardDistance)
+        {
 
-        //}
-
-        if (distanceToTarget < forwardDistance){
-              
             bossApproached = true;
 
-        }else{
+        }
+        else
+        {
 
             bossApproached = false;
 
@@ -254,7 +202,7 @@ public  class BossGolem : Enemy
 
             attackCool = returnAtttackcool;
 
-            attakCount = 0;
+            attackCount = 0;
 
             coolDownTime = setCoolDownTime;
 
@@ -266,17 +214,10 @@ public  class BossGolem : Enemy
         { 
             case ActionType.TowardOn:
 
-                if (actionType == ActionType.CoolDown || actionType == ActionType.Jump || actionType == ActionType.Lading) return;
+                if (actionType == ActionType.CoolDown || actionType == ActionType.Jump || actionType == ActionType.Landing) return;
 
                 bossSpeed += Time.deltaTime;
-
-                //if (rb.isKinematic != false || myAgent.enabled != false)
-                //{
-                //    rb.isKinematic = true;
-                //    myAgent.enabled = true;
-                //}
-               
-              
+       
 
                 if (bossApproached && bossSpeed > 1){
 
@@ -331,7 +272,8 @@ public  class BossGolem : Enemy
 
                 }
 
-                if (attakCount < 3)
+                //３はマジックナンバーです。変数化するか、なぜ３なのか説明書いてください。
+                if (attackCount < 3)
                 {
 
                     attackCool -= Time.deltaTime;
@@ -342,7 +284,7 @@ public  class BossGolem : Enemy
                     {
 
                         actionType = ActionType.Attack;
-                       
+
                     }
                 }
                 else
@@ -367,9 +309,7 @@ public  class BossGolem : Enemy
                 { 
                     rb.isKinematic = false;
 
-                    myAgent.enabled = false;
-
-                    //rb.AddForce(0, jumpForce, 0f, ForceMode.Impulse);
+                    myAgent.enabled = false;        
 
                     animCon.SetTrigger("Jump");
  
@@ -378,7 +318,7 @@ public  class BossGolem : Enemy
 
             break;
 
-                case ActionType.Lading:
+                case ActionType.Landing:
 
                 thisBossCollider.enabled = false;
 
@@ -389,19 +329,21 @@ public  class BossGolem : Enemy
                    
                     animCon.SetTrigger("Land");
 
-                    attakCount = 0;
+                    attackCount = 0;
 
                 }
 
                 break;
         }
 
-        if (bossHPSlide != null){
+        //ブロック説明書いて
+        if (bossHPSlide != null)
+        {
 
             bossHPSlide.SetHealth(liveBossHP);
 
         }
-
+          //ブロック説明書いて
         if (liveBossHP < 0){
 
             bossHPSlide.HealthDeath();
@@ -425,9 +367,12 @@ public  class BossGolem : Enemy
     { 
         bossGrounded = CheckGrounded();
 
-        if (bossAnimSpeed <= 3f) { 
+        //3fはマジックナンバーです。変数化するか、なぜ3fなのか説明書いてください。
+        if (bossAnimSpeed <= 3f)
+        {
 
-        bossAnimSpeed = bossSpeed/2.0f;
+            //2と割る理由
+            bossAnimSpeed = bossSpeed / 2.0f;
 
         } 
 
@@ -482,9 +427,6 @@ public  class BossGolem : Enemy
             hitting = true;
 
             StartCoroutine(HittingFalse());
-
-            //Invoke("HittingFalse", 0.2f);
-
             
         }
 
@@ -517,7 +459,7 @@ public  class BossGolem : Enemy
 
             break;
 
-            case ActionType.Lading:
+            case ActionType.Landing:
 
                 AttackActionType = "Impact";
 
@@ -543,13 +485,14 @@ public  class BossGolem : Enemy
     public void AttackOn()//アニメーションイベントで制御
     { 
         attackCollider.enabled = true;
+        //2の説明書いて
         soundManager.OneShot_Boss_Action_Sound(2);
     }
 
     public void AttackOff()//アニメーションイベントで制御
     {
         attackCollider.enabled = false;
-        attakCount++;
+        attackCount++;
         attackCool = returnAtttackcool;
         actionType = ActionType.Wait;
     }
@@ -558,7 +501,7 @@ public  class BossGolem : Enemy
     {
         rb.AddForce(0, jumpForce, 0f, ForceMode.Impulse);
         rayLength = 0;
-        actionType = ActionType.Lading;
+        actionType = ActionType.Landing;
     }
 
     public void Fall()//アニメーションイベントで制御
@@ -576,7 +519,11 @@ public  class BossGolem : Enemy
         impactCollider.enabled = false;
         rb.isKinematic = true;
         myAgent.enabled = true;
+        //３の説明書いて
         soundManager.OneShot_Boss_Action_Sound(3);
+
+        //以下の90fはマジックナンバーです。変数化するか、なぜ90fなのか説明書いてください。
+        //２の意味は？
         Instantiate(bossEffects[2], gameObject.transform.position, Quaternion.Euler(-90f, 0f, 0f));
 
         StartCoroutine(ChangeAction());
@@ -618,12 +565,11 @@ public  class BossGolem : Enemy
 
         bossHPSlide.HealthDeath();
 
-        //plasta.PlayerExp += getExp;
-
         OffCollider();
 
         animCon.SetBool("Die", true);
 
+        //４の意味は？
         soundManager.OneShot_Boss_Action_Sound(4);
 
         StartCoroutine(BossDieEffectAndDestroy());
@@ -636,6 +582,7 @@ public  class BossGolem : Enemy
         {
             battleManager.Boss_Die_Vibration();
 
+            //２で割る理由は？
             Time.timeScale /= 2.0f;
 
             bossDie = true;
@@ -643,17 +590,20 @@ public  class BossGolem : Enemy
             yield return new WaitForSeconds(5f);
 
             Time.timeScale = 1;
-
+ 
+            //3は何？
             Instantiate(bossEffects[3], gameObject.transform.position, Quaternion.identity);
 
             Destroy(findBossHPSlide);
 
             escapeObject.SetActive(true);
 
+
+            //５は何？
             soundManager.OneShot_Boss_Action_Sound(5);
 
             battleManager.BossBattle = false;
-
+            //0.15f病後にオブジェクト削除
             Destroy(gameObject, 0.15f);
         }
     }
@@ -668,30 +618,5 @@ public  class BossGolem : Enemy
         Gizmos.color = bossGrounded ? Color.green : Color.red;
         Gizmos.DrawRay(transform.position + Vector3.up * rayOffset, Vector3.down * rayLength);
     }
-
-    //public void ActionStart()
-    //{ 
-    //    bossActionStart = false;
-
-    //    findBossHPSlide.SetActive(true);
-    //}
-    //private void MoveLimit(float _yLimit, float yLimit)
-    //{
-    //    Vector3 LimitPos = transform.position;
-
-    //    float _xLimit = -21f;  float xLimit = 30f;
-
-    //    //_yLimit = 0f;    _yLimit = 5f;
-
-    //    float _zLimit = -30f;  float zLimit = 30f;
-
-    //    LimitPos.x = Mathf.Clamp(LimitPos.x, _xLimit, xLimit);
-    //    LimitPos.y = Mathf.Clamp(LimitPos.y, _yLimit, yLimit);
-    //    LimitPos.z = Mathf.Clamp(LimitPos.z, _zLimit, zLimit);
-
-    //    transform.position = LimitPos;
-    //}
-
-
-   
+    
 }

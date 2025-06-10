@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 /// <summary>
 /// 自身のコリジョンに「プレイヤー」が触れたら指定した座標に敵を召喚するクラスです。
 /// </summary>
@@ -12,7 +13,7 @@ public class SummonTrigger : MonoBehaviour
     [SerializeField] 
     List<Transform> enemyGateList = new List<Transform>();
 
-    private SoundManager SoundManager;
+    private SoundManager soundManager;
 
     private GameObject findSoundManager;
 
@@ -20,59 +21,53 @@ public class SummonTrigger : MonoBehaviour
 
     private GameObject findBattleManager;
 
-    private float summonIntarval;
+    private float summonInterval;
     [SerializeField]
-    private float return_SummonIntarval = 0.2f;
+    private float return_SummonInterval = 0.2f;
 
     private int summonCount = 0;
 
     [SerializeField]
-    private int SummonCountLimit;
+    private int summonCountLimit;
 
     [SerializeField]
-    private int specialMonsNum;
+    private int specialMonsNum; //説明書いて
     [SerializeField]
-    private bool existSpacialMons = false;
+    private bool existSpecialMons = false;
 
     [SerializeField]
-    private bool endLessSummon = false;
+    private bool endlessSummon = false;
 
 
     private void Start()
     {
-        //findGameManager = GameObject.FindWithTag("GameManager");
 
         findBattleManager = GameObject.FindWithTag("BattleManager");
 
         findSoundManager = GameObject.FindWithTag("SoundManager");
 
-        //gameManager = findGameManager.GetComponent<GameManager>();
-
         battleManager = findBattleManager.GetComponent<BattleManager>();
 
-        SoundManager = findSoundManager.GetComponent<SoundManager>();
+        soundManager = findSoundManager.GetComponent<SoundManager>();
     }
     private void OnTriggerStay(Collider other)
     {
-        //if (!battleManager.GameStart) return;
-
 
         if (other.gameObject.tag == "Player")
-        {
-            
-            if (summonIntarval > 0)
+        {         
+            if (summonInterval > 0)
             {
-                summonIntarval -= Time.deltaTime;
+                summonInterval -= Time.deltaTime;
             }
 
-            if (summonIntarval <= 0)
+            if (summonInterval <= 0)
             { 
              Summon();
-             summonIntarval = return_SummonIntarval;
+             summonInterval = return_SummonInterval;
             }
            
 
-            if (summonCount >= SummonCountLimit&&endLessSummon == false)
+            if (summonCount >= summonCountLimit&&endlessSummon == false)
             { 
             Destroy(gameObject);
             }
@@ -82,7 +77,7 @@ public class SummonTrigger : MonoBehaviour
 
     private void Summon()
     {
-        if (summonCount >= SummonCountLimit && endLessSummon == false) return;
+        if (summonCount >= summonCountLimit && endlessSummon == false) return;
 
         var num = Random.Range(0, enemyPrefabList.Count);
 
@@ -91,18 +86,18 @@ public class SummonTrigger : MonoBehaviour
         var posNum = Random.Range(0, enemyGateList.Count);
         var pos = enemyGateList[posNum];
 
-        var obj = Instantiate(prefab, pos.position, Quaternion.Euler(0f,180f,0f));
+        var obj = Instantiate(prefab, pos.position, Quaternion.Euler(0f,180f,0f)); //マジックナンバー発見！
 
         battleManager.Enemy_Summon_Effect(obj);
 
-        SoundManager.OneShot_Enemy_Action_Sound(0);
+        soundManager.OneShot_Enemy_Action_Sound(0);
 
-        if (existSpacialMons && num == specialMonsNum)
+        if (existSpecialMons && num == specialMonsNum)
         {
             enemyPrefabList.RemoveAt(specialMonsNum);
         }
 
-        if (endLessSummon) return;
+        if (endlessSummon) return;
 
         summonCount++;
     }

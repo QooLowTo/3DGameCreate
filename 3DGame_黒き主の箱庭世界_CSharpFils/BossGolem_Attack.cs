@@ -8,102 +8,55 @@ using UnityEngine;
 /// </summary>
 public class BossGolem_Attack : MonoBehaviour
 {
-   
-    private Player_Battle_Controller plaCon;
 
-    //private Player_Status_Controller Plasta;
-
-    //private GameManager gameManager;
+    private Player_Battle_Controller playerController;
 
     private BossGolem bossGolem;
 
     private int playerHitDamage;
 
-    [SerializeField,Header("ボスの通常攻撃の威力")]
+    [SerializeField, Header("ボスの通常攻撃の威力")]
     private int bossAttackDamage;
 
-    [SerializeField,Header("ボスのノックバック攻撃の威力")]
+    [SerializeField, Header("ボスのノックバック攻撃の威力")]
     private int bossKnockBackAttackDamage;
 
-    private bool attaking = false;//重複してヒットしないよう
+    private bool isAttacking = false;//攻撃中かどうか判定。重複してヒットしないよう
 
-    [SerializeField,Header("ボスのノックバック量")] 
+    [SerializeField, Header("ボスのノックバック量")]
     private float knockbackPower = 30f;
 
-    [SerializeField,Header("ボスのノックバック間隔")] 
+    [SerializeField, Header("ボスのノックバック間隔")]
     private float knockbackSpeed = 0.5f;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         bossGolem = GetComponent<BossGolem>();
-        //StartEnemySetting();
 
-        //findPla = GameObject.FindWithTag("Player");
+        playerController = bossGolem.Target.GetComponent<Player_Battle_Controller>();
 
-        //findGM = GameObject.FindWithTag("GameManager");
-
-        plaCon = bossGolem.Target.GetComponent<Player_Battle_Controller>();
-
-        //Plasta = findPla.GetComponent<Player_Status_Controller>();
-
-       
-
-        //gameManager = findGM.GetComponent<GameManager>();
-       
     }
 
-    // Update is called once per frame
     private void OnTriggerEnter(Collider other)
     {
-        if (bossGolem.BossAttackActionType() == "" || other.gameObject != bossGolem.Target || plaCon.IsDown || plaCon.Avoidancing || attaking) return;
+        if (bossGolem.BossAttackActionType() == "" || other.gameObject != bossGolem.Target || playerController.IsDown || playerController.Avoidancing || isAttacking) return;
 
         Debug.Log(bossGolem.BossAttackActionType());
 
-        //switch (bossGolem.BossAttackActionType()){
+        BossAttack();
 
-        //    case "Attack":
+    }
 
-        //        //other = bossGolem.AttackCollider;
-
-        //        BossAttack();
-
-        //        break;
-
-        //    case "HornAttack":
-
-        //        //other = bossGolem.HornAttackCollider;
-
-        //        BossAttack();
-
-        //        break;
-
-        //    case "Impact":
-
-        //        other = bossGolem.ImpactCollider;
-
-        //    break;
-           
-        //}
-
-        //if (other.gameObject == findPla && !plaCon.IsDown)
-        //{
-
-            BossAttack();
-
-        //}
-
-        void BossAttack()
+     void BossAttack()
         {
 
             if ((bossGolem.BossAttackActionType() == "Attack")){
 
                 playerHitDamage = bossGolem.BattleManager.DamegeCalculation(bossGolem.PlaSta.PlayerDefance, bossAttackDamage);
 
-                plaCon.OnHit(playerHitDamage);
+                playerController.OnHit(playerHitDamage);
 
-                attaking = true;
+                isAttacking = true;
 
                 StartCoroutine(AttackingFalse());
 
@@ -111,16 +64,15 @@ public class BossGolem_Attack : MonoBehaviour
                 {
                     yield return new WaitForSeconds(0.2f);
 
-                    attaking = false;
+                    isAttacking = false;
                 }
 
             }else{
 
                 playerHitDamage = bossGolem.BattleManager.DamegeCalculation(bossGolem.PlaSta.PlayerDefance, bossAttackDamage);
 
-                plaCon.OnKnockBack(playerHitDamage, knockbackPower, knockbackSpeed,gameObject.transform);
+                playerController.OnKnockBack(playerHitDamage, knockbackPower, knockbackSpeed,gameObject.transform);
 
             }
         }
-    }
 }

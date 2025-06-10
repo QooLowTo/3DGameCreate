@@ -4,10 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 /// <summary>
 /// プレイヤーが敵にロックオンできるようにするクラスです。
 /// </summary>
-public class Player_Camera_Controller : MonoBehaviour
+public class PlayerCameraController : MonoBehaviour
 {
 
     private LockOn lookOn;
@@ -35,7 +36,6 @@ public class Player_Camera_Controller : MonoBehaviour
     public bool GetTarget { get => getTarget; set => getTarget = value; }
     public bool Locking { get => locking; set => locking = value; }
 
-    // Start is called before the first frame update
     void Start()
     {
         lookOn = findLookOn.GetComponent<LockOn>();
@@ -44,13 +44,6 @@ public class Player_Camera_Controller : MonoBehaviour
       
     }
 
-    // Update is called once per frame
-    //void Update()
-    //{
-        
-    //}
-
-   
 
     public void LockOn(InputAction.CallbackContext context)
     {
@@ -67,17 +60,14 @@ public class Player_Camera_Controller : MonoBehaviour
 
 
             StartCoroutine(ColliderFalse());
-
-            //Invoke("ColliderFalse", 0.5f);
            
         }
-        else if (lookOn.LockOnCineVir.enabled && getTarget/* && !lockTaget && !lockOut*/)
+        else if (lookOn.LockOnCineVir.enabled && getTarget)
         {
         
 
             lookOnCollider.enabled = false;
 
-            //lookOn.TargetTramsform.Clear();
 
             lookOn.LockOnCineVir.enabled = false;
 
@@ -119,10 +109,5 @@ public class Player_Camera_Controller : MonoBehaviour
         lockTaget = false;
     }
 
-    //private void LockOutFalse()
-    //{
-    //    lockOut = false;
 
-    //    Debug.Log("ee");
-    //}
 }

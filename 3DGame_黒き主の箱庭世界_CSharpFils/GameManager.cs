@@ -15,52 +15,31 @@ public class GameManager : MonoBehaviour
     [SerializeField,Header("デバッグモード(スタート演出を無視して開始できる。)")]
     protected bool debugMode = false;
 
-    //[SerializeField]
-    //protected bool gameStart = false;//ゲームを開始できるようにする。
+    protected Player_Status_Controller playerStatCon;
 
-    protected Player_Status_Controller plaSta;
-
-    protected Player_Experience_Manager plaExp;
+    protected Player_Experience_Manager playerEXPManager;
 
     [SerializeField]
-    protected GameObject findPla;
+    protected GameObject findPlayer;
 
     [SerializeField]
     protected GameObject startUI;
 
     protected Gamepad gamepad;
 
-    //[SerializeField]
-    //protected GameObject musicManager;
 
     [SerializeField]
     protected SettingData settingData;
 
     [SerializeField]
-    protected StatusDate statusDate;
+    protected StatusDate statusData;
 
     [SerializeField]
-    protected ExpManager expManager;
+    protected ExpManager eXPManager;
 
-    //protected AudioSource adios;
 
     [SerializeField]
     protected CinemachineInputAxisController cameraAxis;
-
-    //[SerializeField]
-    //protected List<AudioClip> player_Sounds = new List<AudioClip>();
-
-    //[SerializeField]
-    //protected List<AudioClip> player_Walk_Sounds = new List<AudioClip>();
-
-    //[SerializeField]
-    //protected List<AudioClip> ui_Sounds = new List<AudioClip>();
-
-    //[SerializeField]
-    //protected List<AudioClip> other_Sounds = new List<AudioClip>();
-
-   
-
   
     public CinemachineInputAxisController CameraAxis { get => cameraAxis; set => cameraAxis = value; }
 
@@ -70,13 +49,7 @@ public class GameManager : MonoBehaviour
         if (Time.timeScale != 1.0f)
         {
             Time.timeScale = 1.0f;
-        }
-
-        //adios = gameObject.GetComponent<AudioSource>();
-
-        //gameObject.GetComponent<AudioSource>().volume = settingData.SoundVolum;
-
-        //musicManager.GetComponent<AudioSource>().volume = settingData.BgmVolume;
+        }   
 
         cameraAxis.GetComponent<CinemachineInputAxisController>();
 
@@ -88,33 +61,18 @@ public class GameManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
     }
-
-    //protected void DebugGameStart()
-    //{
-    //    gameStart = true;
-
-    //    plaSta.HealthBar.SetActive(true);
-
-    //    plaSta.SetLiveHP();
-
-    //    cameraAxis.enabled = true;
-
-    //    StartCoroutine();
-    //}
-
    
     /// <summary>
     /// プレイヤーのオブジェクトを参照し、プレイヤーのステータスクラスとExpクラスをゲットするメソッドです。
     /// </summary>
     protected void StartGetPlayerStatus()
     {
-        Debug.Log(findPla);
+        Debug.Log(findPlayer);
 
-        plaSta = findPla.GetComponent<Player_Status_Controller>();
+        playerStatCon = findPlayer.GetComponent<Player_Status_Controller>();
 
-        plaExp = findPla.GetComponent<Player_Experience_Manager>();
+        playerEXPManager = findPlayer.GetComponent<Player_Experience_Manager>();
 
-        //plaSta.HealthBar.SetActive(true);
     }
 
     /// <summary>
@@ -124,23 +82,21 @@ public class GameManager : MonoBehaviour
     public void OnGameStart()
     {
 
-        //gameStart = true;
+        findPlayer.GetComponent<Player>().GameStart = true;
 
-        findPla.GetComponent<Player>().GameStart = true;
+        playerStatCon.HealthBar.SetActive(true);
 
-        plaSta.HealthBar.SetActive(true);
-
-        plaSta.SetLiveHP();
+        playerStatCon.SetLiveHP();
 
         cameraAxis.enabled = true;
 
    
 
-        findPla.GetComponent<CharacterController>().enabled = true;
+        findPlayer.GetComponent<CharacterController>().enabled = true;
 
-        Debug.Log(findPla.GetComponent<CharacterController>().enabled);
+        Debug.Log(findPlayer.GetComponent<CharacterController>().enabled);
 
-        findPla.GetComponent<PlayerInput>().enabled = true;
+        findPlayer.GetComponent<PlayerInput>().enabled = true;
     }
 
     protected IEnumerator DebugGameStart()
@@ -149,69 +105,6 @@ public class GameManager : MonoBehaviour
 
         OnGameStart();
     }
-
-    //public void OneShotPlayerSound(int soundNum)
-    //{
-    //    adios.PlayOneShot(player_Sounds[soundNum]);
-    //}
-
-    //public void OneShotPlayerMoveSound(int soundNum)
-    //{
-    //    adios.PlayOneShot(player_Walk_Sounds[soundNum]);
-    //}
-
-
-    //public void Decision_Sound()
-    //{
-    //    adios.PlayOneShot(ui_Sounds[4]);
-    //}
-    //public void Cancel_Sound()
-    //{
-    //    adios.PlayOneShot(ui_Sounds[5]);
-    //}
-
-
-    //public void Menu_Open_Sound()
-    //{
-    //    adios.PlayOneShot(ui_Sounds[0]);
-    //}
-
-    //public void Select_Sound()
-    //{
-    //    adios.PlayOneShot(ui_Sounds[2]);
-    //}
-
-    //public void Select_Ceiling_Sound()
-    //{
-    //    adios.PlayOneShot(ui_Sounds[3]);
-    //}
-
-    //public void UI_Slide_Sound()
-    //{
-    //    adios.PlayOneShot(ui_Sounds[1]);
-    //}
-
-    //public void LoadingStart_Sound()
-    //{
-    //    adios.PlayOneShot(ui_Sounds[6]);
-    //    adios.PlayOneShot(ui_Sounds[7]);
-    //}
-
-    //public void Get_Weapon_Sound()
-    //{
-    //    adios.PlayOneShot(other_Sounds[0]);
-    //}
-
-    //public void Portal_Appearance_Sound()
-    //{
-    //    adios.PlayOneShot(other_Sounds[1]);
-    //}
-
-    //public void BGMStop()
-    //{ 
-    //musicManager.GetComponent<AudioSource>().Stop();
-    //}
-
 
     /// <summary>
     /// ローディング画面に移動するためのメソッドです。シグナルで使用。

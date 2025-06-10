@@ -9,17 +9,15 @@ public class KillEnemyCount : MonoBehaviour
     private Enemy myEnemy;
 
     [SerializeField]
-    private FlagManagementData gameDate;
+    private FlagManagementData flagManagementData;
 
   
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         myEnemy = GetComponent<Enemy>();
     }
 
-    // Update is called once per frame
     void Update()
     { 
         if (myEnemy.EnemyDie) return;
@@ -32,7 +30,7 @@ public class KillEnemyCount : MonoBehaviour
 
     private void KillCountPlus()
     {
-        gameDate.KillCount++;
+        flagManagementData.KillCount++;
       
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
 /// <summary>
 /// 次のシーンを非同期でローディングするクラスです。
 /// </summary>
@@ -13,7 +14,7 @@ public class GameLoading : MonoBehaviour
     [SerializeField]
     private ExpManager expManager;
     [SerializeField] 
-    private FlagManagementData flagmentDate;
+    private FlagManagementData flagManagementData;
     [SerializeField]
     private PlayerTransformData playerTransform;
     [SerializeField]
@@ -23,10 +24,10 @@ public class GameLoading : MonoBehaviour
 
     [SerializeField] 
     private GameObject titleBackUI;
-    // Start is called before the first frame update
+  
     void Start()
     {
-        if (flagmentDate.SceneName == "Title")
+        if (flagManagementData.SceneName == "Title")
         {
             titleBackUI.SetActive(true);
         }
@@ -34,14 +35,12 @@ public class GameLoading : MonoBehaviour
         StartCoroutine(LoadNextSceneAsync());
     }
 
-    // Update is called once per frame
     IEnumerator LoadNextSceneAsync()
     {
-        // 前のロードシーンをアンロード
-        //SceneManager.UnloadSceneAsync("LoadingScene");
+     
 
         // 次のシーンを非同期で読み込み
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(flagmentDate.SceneName);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(flagManagementData.SceneName);
 
         while (!asyncLoad.isDone)
         {

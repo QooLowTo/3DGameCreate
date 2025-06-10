@@ -14,7 +14,7 @@ using Unity.Cinemachine;
 /// <summary>
 /// バトル中のプレイヤーを制御するクラスです。
 /// </summary>
-public class Player_Battle_Controller : Player
+public class PlayerBattleController : Player
 {
     protected float returnSpeed;//ダッシュ解除時にplayerSoeedに返す値
     
@@ -28,10 +28,10 @@ public class Player_Battle_Controller : Player
     protected float doTime = 0.5f;//DoTweenの移動時間
 
     [SerializeField,Header("プレイヤーの武器")]
-    protected GameObject myWepon;//プレイヤーの武器
+    protected GameObject myWeapon;//プレイヤーの武器
 
     [SerializeField,Header("トレイル")]
-    protected GameObject weponEffect;//トレイル
+    protected GameObject weaponEffect;//トレイル
 
     [SerializeField, Header("ジャンプ攻撃時の判定")]
     private Collider jumpAttackCol;//ジャンプ攻撃時の判定
@@ -43,11 +43,11 @@ public class Player_Battle_Controller : Player
     [SerializeField]
     protected GameObject findBattleManager;
 
-    protected bool isChanegeAction = false;//行動中判定
+    protected bool isChangeAction = false;//行動中判定
 
     protected bool isDash = false;//ダッシュ中判定
 
-    protected bool onJumpping = false;//二段ジャンプ中判定
+    protected bool onJumping = false;//二段ジャンプ中判定
 
     protected bool approached = false;//敵との距離
 
@@ -57,9 +57,6 @@ public class Player_Battle_Controller : Player
 
     protected bool forwardAvoidancing = false;//ロックオンオン中の前方向の回避の制御用。
 
-   
-
- 
    
     public RigBuilder Rig { get => rig; set => rig = value; }
   
@@ -71,16 +68,13 @@ public class Player_Battle_Controller : Player
     public bool Approached { get => approached; set => approached = value; } 
     public bool ForwardAvoidancing { get => forwardAvoidancing; set => forwardAvoidancing = value; }
     public bool StopCombo { get => stopCombo; set => stopCombo = value; }
-    //public int AttackCombo { get => attackCombo; set => attackCombo = value; }
+
     public float MoveInputAbs { get => moveInputAbs; set => moveInputAbs = value; }
     public Vector2 MoveInput { get => moveInput; set => moveInput = value; }
-    public GameObject MyWepon { get => myWepon; set => myWepon = value; }
-  
-    // Start is called before the first frame update
+    public GameObject MyWepon { get => myWeapon; set => myWeapon = value; }
 
     private void Start()
     {
-
 
         StartCoroutine(Starting());
 
@@ -100,7 +94,6 @@ public class Player_Battle_Controller : Player
 
         StartPlayerSet();
 
-        //plaIn.SwitchCurrentActionMap("Player");
 
         dashInput = plaIn.actions["Dash"];
 
@@ -114,13 +107,13 @@ public class Player_Battle_Controller : Player
    
     private void FixedUpdate()
     {
-        if (gameOver ||/* !battleManager.GameStart*/ !gameStart || !charaCon) return;
+        if (gameOver || !gameStart || !charaCon) return;
 
         CheckGroundPlayerList();
 
-        if (!attacking&& !jumpAttackingFall && !isDown && !avoidancing && !isChanegeAction&& !hitting)
+        if (!attacking&& !jumpAttackingFall && !isDown && !avoidancing && !isChangeAction&& !hitting)
         {
-            //animCon.SetFloat("MoveInput", moveInputAbs);
+            
 
             PlayerMoveInputControl();
         }
@@ -133,12 +126,12 @@ public class Player_Battle_Controller : Player
 
         if (avoidancing)
         {
-            if (myWepon.GetComponent<BoxCollider>().enabled)
+            if (myWeapon.GetComponent<BoxCollider>().enabled)
             {
                 OffCollider();
             }
 
-            if (weponEffect.GetComponent<TrailRenderer>().emitting)
+            if (weaponEffect.GetComponent<TrailRenderer>().emitting)
             {
                 OffEffect();
             }
@@ -149,7 +142,7 @@ public class Player_Battle_Controller : Player
             AllCancel();
         }
 
-        if (!isChanegeAction && !attacking && !isDown && !hitting)
+        if (!isChangeAction && !attacking && !isDown && !hitting)
         {
 
             PlayerMoveControl();
@@ -181,7 +174,7 @@ public class Player_Battle_Controller : Player
 
         }
 
-        if ((moveInputAbs != 0) && !isChanegeAction && !attacking && !isJumpping && !avoidancing && !isDown && OnGroundLayer(true))
+        if ((moveInputAbs != 0) && !isChangeAction && !attacking && !isJumpping && !avoidancing && !isDown && OnGroundLayer(true))
         {
             rig.enabled = true;
         }
@@ -189,13 +182,6 @@ public class Player_Battle_Controller : Player
         {
             rig.enabled = false;
         }
-
-
-        //if (isJumpping&&onJumpping){//二段ジャンプ処理
-
-        //    DoubleJump();
-
-        //}
 
 
 
@@ -240,124 +226,7 @@ public class Player_Battle_Controller : Player
             Die();
         }
     }
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    if (battleManager.GameOver || !battleManager.GameStart || !charaCon.enabled) return;
-
-
-
-    //    //if (!isChanegeAction && !attacking && !isDown && !hitting)
-    //    //{
-
-    //    //    PlayerMoveControl();
-
-    //    //    if (moveInputAbs != 0 && !isJumpping && groundPlayerList[1]/*階段だったら*/)
-    //    //    {
-
-    //    //        MovingLimit();
-
-    //    //    }
-    //    //}
-
-
-    //    //PlayerGravityControl();
-
-
-    //    //var ispressed = dashInput.IsPressed();
-
-    //    //if (ispressed && moveInputAbs != 0)
-    //    //{
-
-    //    //    OnDash();
-
-    //    //}
-    //    //else
-    //    //{
-
-    //    //    OffDash();
-
-    //    //}
-
-    //    //if ((moveInputAbs != 0) && !isChanegeAction && !attacking && !isJumpping && !avoidancing && !isDown && OnGroundLayer(true))
-    //    //{
-    //    //    rig.enabled = true;
-    //    //}
-    //    //else
-    //    //{
-    //    //    rig.enabled = false;
-    //    //}
-
-
-    //    ////if (isJumpping&&onJumpping){//二段ジャンプ処理
-
-    //    ////    DoubleJump();
-
-    //    ////}
-
-
-
-    //    //if (landing && OnGroundLayer(false))
-    //    //{
-
-    //    //    if (starting || hitting) return;
-
-
-    //    //    Fall();
-    //    //}
-
-
-    //    //if (!landing && OnGroundLayer(true))
-    //    //{
-
-    //    //    landing = true;
-
-    //    //    if (jumpAttackingFall)
-    //    //    {
-
-    //    //        AttackGrounded();
-
-    //    //    }
-    //    //    else
-    //    //    {
-
-    //    //        Grounded();
-    //    //    }
-    //    //}
-
-    //    //if (!attacking && stopCombo)
-    //    //{
-
-    //    //    stopCombo = false;
-
-    //    //}
-
-    //    //if (plasta.LivePlayerHP <= 0)
-    //    //{
-
-    //    //    Die();
-    //    //}
-
-
-    //}
-        
-       
-        //void DoubleJump()//二段ジャンプ処理
-        //{
-        //    if (plaIn.actions["Jump"].triggered && OnGroundLayer(false)){
-        //        animCon.SetBool("JumpAnim", false);
-
-
-        //        animCon.SetBool("OnJump", true);
-
-        //        playerVelocity += jumpForse % 80;
-
-        //        gameManager.OneShotPlayerSound(3);
-
-        //        onJumpping = false;
-
-        //    }
-        //}
+  
         /// <summary>
         /// プレイヤーがダッシュアクションを行った際に呼び出されるメソッド。
         /// </summary>
@@ -474,7 +343,7 @@ public class Player_Battle_Controller : Player
 
         if (jumpAttackingFall) return;
 
-        if (!isChanegeAction)
+        if (!isChangeAction)
         {
 
             attacking = true;
@@ -504,7 +373,7 @@ public class Player_Battle_Controller : Player
 
     public void Avoidance(InputAction.CallbackContext context)
     {
-        if (!context.performed || avoidancing || hitting || isDown || isJumpping || onJumpping || OnGroundLayer(false)) return;
+        if (!context.performed || avoidancing || hitting || isDown || isJumpping || onJumping || OnGroundLayer(false)) return;
 
          if(moveInputAbs == 0 ){
             animCon.SetBool("BackAvoidance", true);
@@ -522,7 +391,7 @@ public class Player_Battle_Controller : Player
 
         soundManager.OneShot_Player_Sound(5);//回避サウンド
 
-        isChanegeAction = true;
+        isChangeAction = true;
         avoidancing = true;
     }
 
@@ -616,7 +485,7 @@ public class Player_Battle_Controller : Player
 
     protected void OffEffect()
     { 
-      weponEffect.GetComponent<TrailRenderer>().emitting = false;
+      weaponEffect.GetComponent<TrailRenderer>().emitting = false;
     }
 
    
@@ -682,7 +551,7 @@ public class Player_Battle_Controller : Player
 
     public void CancelAvoidanceAction()
     { 
-        isChanegeAction = false;
+        isChangeAction = false;
 
         attackingLook = false;
 
@@ -693,13 +562,13 @@ public class Player_Battle_Controller : Player
 
     private void OnCollider()
     {
-        myWepon.GetComponent<BoxCollider>().enabled = true;
-        weponEffect.GetComponent<TrailRenderer>().emitting = true;
+        myWeapon.GetComponent<BoxCollider>().enabled = true;
+        weaponEffect.GetComponent<TrailRenderer>().emitting = true;
         soundManager.OneShot_Player_Sound(0);//剣の素振りサウンド
     }
     protected void OffCollider()
     {
-        myWepon.GetComponent<BoxCollider>().enabled = false;
+        myWeapon.GetComponent<BoxCollider>().enabled = false;
     }
 
     private void OffComboStop()
@@ -799,7 +668,7 @@ public class Player_Battle_Controller : Player
 
         isDash = false;
         isJumpping = false;
-        onJumpping = false;
+        onJumping = false;
         jumpAttackingFall = false;
 
         CancelAvoidance("BackAvoidance");

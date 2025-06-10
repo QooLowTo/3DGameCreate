@@ -4,11 +4,12 @@ using UnityEngine;
 /// <summary>
 /// セーブスロットごとにデータを分ける際に用いるクラスです。
 /// </summary>
+
 [CreateAssetMenu(menuName = "スクリプタブ/セーブスロットデータ記録オブジェクト")]
 public class MemorizeLevelAndSceneName : ScriptableObject
 {
     [SerializeField]
-    private List<string> savedPlayerLevelList = new List<string>();
+    private List<string> savedPlayerLevelList = new List<string>(); //説明書いて
 
     [SerializeField]
     private List<string> savedSceneNameList = new List<string>();

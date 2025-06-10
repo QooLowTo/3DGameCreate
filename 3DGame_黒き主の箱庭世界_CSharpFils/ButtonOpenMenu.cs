@@ -18,9 +18,9 @@ public class ButtonOpenMenu : MonoBehaviour
 
     string selectButtonName;
 
-    private bool openNow = false;
+    private bool openNow = false; //何のための変数？
 
-    private bool cancelOK = false;//UIコントローラーで使う
+    private bool cancelOK = false;　//UIコントローラーで使う
 
     [SerializeField]
     private PlayableDirector savePopPlayable;
@@ -32,18 +32,17 @@ public class ButtonOpenMenu : MonoBehaviour
     private GameObject backSceneSlide;
 
     [SerializeField]
-    private FlagManagementData flagmentData;
+    private FlagManagementData flagManagementData;
 
     private List<PlayableDirector> buttonPlayables = new List<PlayableDirector>();
 
-    private List<GameObject> selsectBackButton  = new List<GameObject>();
+    private List<GameObject> selectBackButton  = new List<GameObject>();
 
     private List<GameObject> selectButton = new List<GameObject>();
     public bool OpenNow { get => openNow; set => openNow = value; }
     public bool CancelOK { get => cancelOK; set => cancelOK = value; }
     public List<GameObject> SelectButton { get => selectButton; set => selectButton = value; }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         buttonSelector = GetComponent<ButtonSelector>();
@@ -52,12 +51,12 @@ public class ButtonOpenMenu : MonoBehaviour
 
         buttonPlayables = buttonSelector.ButtonPlayables;
 
-        selsectBackButton = buttonSelector.SelsectBackButton;
+        selectBackButton = buttonSelector.SelsectBackButton;
 
         selectButton = buttonSelector.SelectButton;
     }
 
-    // Update is called once per frame
+
     public void SlideOpen()
     {
 
@@ -66,6 +65,7 @@ public class ButtonOpenMenu : MonoBehaviour
         selectButtonName = buttonSelector.SelectButtonName;
 
 
+        //以下の数字がマジックナンバーと見なされます。enumを使いましょう。
         switch (selectButtonName)
         {
             case "Status":
@@ -106,6 +106,32 @@ public class ButtonOpenMenu : MonoBehaviour
 
                 break;
         }
+
+//enumを使う場合
+        /*
+public enum ButtonType
+{
+    Status,
+    HowToOperate,
+    Save,
+    Titleback,
+    Setting,
+    SceneBack
+}
+public void SlideOpen()
+{
+    soundManager.OneShotDecisionSound(); // 決定サウンド
+
+    selectButtonName = buttonSelector.SelectButtonName;
+
+    ButtonType buttonType;
+
+    if (Enum.TryParse(selectButtonName, out buttonType))
+    {
+        buttonPlayables[(int)buttonType].Play();
+    }
+}
+*/
     }
 
     public void SlidePause()//SignalManagerで使用
@@ -122,7 +148,7 @@ public class ButtonOpenMenu : MonoBehaviour
 
                 buttonPlayables[0].Pause();
 
-                EventSystem.current.SetSelectedGameObject(selsectBackButton[0]);
+                EventSystem.current.SetSelectedGameObject(selectBackButton[0]);
 
 
                 break;
@@ -131,7 +157,7 @@ public class ButtonOpenMenu : MonoBehaviour
 
                 buttonPlayables[1].Pause();
 
-                EventSystem.current.SetSelectedGameObject(selsectBackButton[0]);
+                EventSystem.current.SetSelectedGameObject(selectBackButton[0]);
 
 
                 break;
@@ -139,14 +165,14 @@ public class ButtonOpenMenu : MonoBehaviour
             case "Save":
                 buttonPlayables[2].Pause();
 
-                EventSystem.current.SetSelectedGameObject(selsectBackButton[1]);
+                EventSystem.current.SetSelectedGameObject(selectBackButton[1]);
 
                 break;
 
             case "Titleback":
                 buttonPlayables[3].Pause();
 
-                EventSystem.current.SetSelectedGameObject(selsectBackButton[2]);
+                EventSystem.current.SetSelectedGameObject(selectBackButton[2]);
 
                 break;
 
@@ -154,7 +180,7 @@ public class ButtonOpenMenu : MonoBehaviour
 
                 buttonPlayables[4].Pause();
 
-                EventSystem.current.SetSelectedGameObject(selsectBackButton[0]);
+                EventSystem.current.SetSelectedGameObject(selectBackButton[0]);
 
 
                 break;
@@ -163,7 +189,7 @@ public class ButtonOpenMenu : MonoBehaviour
 
                 buttonPlayables[5].Pause();
 
-                EventSystem.current.SetSelectedGameObject(selsectBackButton[3]);
+                EventSystem.current.SetSelectedGameObject(selectBackButton[3]);
 
 
                 break;
@@ -171,7 +197,7 @@ public class ButtonOpenMenu : MonoBehaviour
 
     }
 
-    public void SlideResum()//ボタン
+    public void SlideResume()//ボタン
     {
         soundManager.OneShotCancelSound();//キャンセルサウンド
 
@@ -270,20 +296,20 @@ public class ButtonOpenMenu : MonoBehaviour
         soundManager.OneShotDecisionSound();//決定サウンド
     }
 
-    public void BackTitle()
+    public void BackToTitle()
     {
         titleBackSlide.SetActive(true);
 
-        flagmentData.SceneName = "Title";
+        flagManagementData.SceneName = "Title";
 
         soundManager.OneShotDecisionSound();//決定サウンド
     }
 
-    public void BackScene()
+    public void BackToScene()
     {
         backSceneSlide.SetActive(true);
 
-        flagmentData.SceneName = "HomeMap";
+        flagManagementData.SceneName = "HomeMap";
 
         soundManager.MusicManager.GetComponent<AudioSource>().Stop();
 
@@ -291,19 +317,4 @@ public class ButtonOpenMenu : MonoBehaviour
 
         soundManager.LoadingStart_Sound();
     }
-
-    //public void LoadScene()
-    //{
-    //    StartCoroutine(LoadSceneAsync("LoadingScene"));
-    //}
-
-    //IEnumerator LoadSceneAsync(string sceneName)
-    //{
-    //    AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-
-    //    while (!asyncLoad.isDone)
-    //    {
-    //        yield return null;
-    //    }
-    //}
 }

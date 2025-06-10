@@ -8,18 +8,18 @@ public class GroundTransform : MonoBehaviour
     private float moveVelocity;
 
     [SerializeField]
-    private float moveVeloX;
+    private float moveVelocityX;
     [SerializeField]
-    private float moveVeloY;
+    private float moveVelocityY;
     [SerializeField]
-    private float moveVeloZ;
+    private float moveVelocityZ;
 
     [SerializeField]
-    private float subVelo = 1;
+    private float subVelocity = 1; //説明書いて
 
     private float accelerationTime = 1f;
     [SerializeField]
-    private float returnAccel;
+    private float returnAccel; //この名前どうかな速度？
 
     [SerializeField]
     private float accelerationValue = 20f;
@@ -52,18 +52,17 @@ public class GroundTransform : MonoBehaviour
     bool onMoveZ = false;
 
     private MoveGround moveGround;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         moveGround = gameObject.GetComponent<MoveGround>();
 
-        moveVeloX = startPos.transform.position.x;
-        moveVeloY = startPos.transform.position.y;
-        moveVeloZ = startPos.transform.position.z;
+        moveVelocityX = startPos.transform.position.x;
+        moveVelocityY = startPos.transform.position.y;
+        moveVelocityZ = startPos.transform.position.z;
 
         if (onMoveX)
         {
-            //moveVeloX =  startPos.transform.position.x;
             moveLimit = limitPos.transform.localPosition.x;
             returnMoveLimit = startPos.transform.position.x;
       
@@ -71,20 +70,17 @@ public class GroundTransform : MonoBehaviour
 
         if (onMoveY)
         {
-            //moveVeloY = startPos.transform.position.y;
             moveLimit = limitPos.transform.localPosition.y;
             returnMoveLimit = startPos.transform.position.y;
         }
 
         if (onMoveZ)
         {
-            //moveVeloZ = startPos.transform.position.z;
             moveLimit = limitPos.transform.localPosition.z;
             returnMoveLimit = startPos.transform.position.z;
         }
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if (moveStart)
@@ -106,7 +102,7 @@ public class GroundTransform : MonoBehaviour
 
             MoveControl();
 
-            moveVector = new Vector3(moveVeloX, moveVeloY, moveVeloZ);
+            moveVector = new Vector3(moveVelocityX, moveVelocityY, moveVelocityZ);
 
             transform.position = moveVector;
         }
@@ -116,7 +112,7 @@ public class GroundTransform : MonoBehaviour
             {
                 moveReturn = false;
                 accelerationTime = 0f;
-                subVelo = 1f;
+                subVelocity = 1f;
                 returnAccel = 0f;
                 firstMoveStart = false;
             }
@@ -125,7 +121,7 @@ public class GroundTransform : MonoBehaviour
 
             ReturnMoveControl();
 
-            moveVector = new Vector3(moveVeloX, moveVeloY, moveVeloZ);
+            moveVector = new Vector3(moveVelocityX, moveVelocityY, moveVelocityZ);
 
             transform.position = moveVector;
         }
@@ -144,7 +140,7 @@ public class GroundTransform : MonoBehaviour
         {
 
             returnAccel += 1f;
-            subVelo = (returnAccel * accelerationValue);
+            subVelocity = (returnAccel * accelerationValue);
             accelerationTime = returnAccel/* + 0.5f*/;
         }
     }
@@ -154,22 +150,22 @@ public class GroundTransform : MonoBehaviour
         if (onMoveX)
         {
         
-            moveVeloX += subVelo * Time.deltaTime;
-            moveVelocity = moveVeloX;
+            moveVelocityX += subVelocity * Time.deltaTime;
+            moveVelocity = moveVelocityX;
         }
 
         if (onMoveY)
         {   
 
-            moveVeloY += subVelo * Time.deltaTime;
-            moveVelocity = moveVeloY;
+            moveVelocityY += subVelocity * Time.deltaTime;
+            moveVelocity = moveVelocityY;
         }
 
         if (onMoveZ)
         { 
 
-            moveVeloZ += subVelo * Time.deltaTime;
-            moveVelocity = moveVeloZ;
+            moveVelocityZ += subVelocity * Time.deltaTime;
+            moveVelocity = moveVelocityZ;
         }
     }
 
@@ -178,22 +174,22 @@ public class GroundTransform : MonoBehaviour
         if (onMoveX)
         {
 
-            moveVeloX -= subVelo * Time.deltaTime;
-            moveVelocity = moveVeloX;
+            moveVelocityX -= subVelocity * Time.deltaTime;
+            moveVelocity = moveVelocityX;
         }
 
         if (onMoveY)
         {
 
-            moveVeloY -= subVelo * Time.deltaTime;
-            moveVelocity = moveVeloY;
+            moveVelocityY -= subVelocity * Time.deltaTime;
+            moveVelocity = moveVelocityY;
         }
 
         if (onMoveZ)
         {
 
-            moveVeloZ -= subVelo * Time.deltaTime;
-            moveVelocity = moveVeloZ;
+            moveVelocityZ -= subVelocity * Time.deltaTime;
+            moveVelocity = moveVelocityZ;
         }
     }
 
@@ -201,7 +197,7 @@ public class GroundTransform : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
         accelerationTime = 0f;
-        subVelo = 1f;
+        subVelocity = 1f;
         returnAccel = 0f;
 
         moveReturn = true;

@@ -4,12 +4,12 @@
 /// </summary>
 public class HomeMapManager : GameManager
 {
-    private Player_Rest_Controller plaRes;
+    private Player_Rest_Controller playerRestCon;
 
     private SoundManager soundManager;
     [SerializeField]
     private GameObject findSoundManager;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
 
@@ -17,18 +17,16 @@ public class HomeMapManager : GameManager
 
         StartGetPlayerStatus();
 
-        plaRes = findPla.GetComponent<Player_Rest_Controller>();
+        playerRestCon = findPla.GetComponent<Player_Rest_Controller>();
 
-       
-
-        //StartGetPlayerStatus(findPla);
 
         if (startUI != null && !debugMode)
         {
 
             startUI.SetActive(true);
 
-            soundManager.OneShot_UI_Sound(7);//ロード完了音
+            //マジックナンバー
+            soundManager.OneShot_UI_Sound(7); //ロード完了音
         }
 
         if (debugMode)
@@ -38,7 +36,5 @@ public class HomeMapManager : GameManager
 
         }
     }
-
-    // Update is called once per frame
    
 }

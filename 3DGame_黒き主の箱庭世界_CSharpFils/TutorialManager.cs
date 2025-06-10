@@ -60,23 +60,18 @@ public class TutorialManager : GameManager
     public Flowchart TutorialFlow { get => tutorialFlow; set => tutorialFlow = value; }
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         soundManager = findSoundManager.GetComponent<SoundManager>();
 
         battleManager = findBattleManager.GetComponent<BattleManager>();
 
-        //adios = gameObject.GetComponent<AudioSource>();
-
-        //gameObject.GetComponent<AudioSource>().volume = settingData.SoundVolum;
-
         tutorialFlow = gameObject.GetComponent<Flowchart>();
 
         plaTCon = findPla.GetComponent<Player_Tutorial_Controller>();
     }
 
-    // Update is called once per frame
+
     void FixedUpdate()
     {
         switch (flagManagementDate.KillCount)
@@ -129,23 +124,15 @@ public class TutorialManager : GameManager
         plaTCon.GameStart = true;
     }
 
-
-    //public void Tutorial_Decision()
-    //{
-    //    soundManager.OneShotDecisionSound();
-    //}
-
-    //public void Tutorial_CancelSound()
-    //{
-    //    soundManager.OneShotDecisionSound();
-    //}
-
-    public void ChageActionUI()
+/// <summary>
+/// UIのアクションマップに切り替えるメソッドです。 -> 合ってる？
+/// </summary>
+    public void ChangeActionUI()
     {
         plaTCon.PlaIn.SwitchCurrentActionMap("UI");
     }
 
-    public void ChageActionPlayer()
+    public void ChangeActionPlayer()
     {
         plaTCon.PlaIn.SwitchCurrentActionMap("Player");
     }

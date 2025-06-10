@@ -4,17 +4,18 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
+
 /// <summary>
 /// 敵をロックオンできるようにするクラスです。
 /// </summary>
 public class LockOn : MonoBehaviour
 {
  
-    private Player_Battle_Controller placon;
+    private Player_Battle_Controller playerBattleCon;
    
-    private Player_Camera_Controller placam;
+    private Player_Camera_Controller playerCameraCon;
     [SerializeField]
-    private GameObject findPla;
+    private GameObject findPlayerObj;
 
     private CinemachineVirtualCameraBase mainCineVir;
     [SerializeField]
@@ -25,84 +26,73 @@ public class LockOn : MonoBehaviour
     private GameObject findLookCineVir;
 
     [SerializeField]
-    private List<Transform> targetTramsform = new List<Transform>();
+    private List<Transform> targetTransform = new List<Transform>();
 
     bool firstLockOn;
 
-    public List<Transform> TargetTramsform { get => targetTramsform; set => targetTramsform = value; }
+    public List<Transform> TargetTransform { get => targetTransform; set => targetTransform = value; }
     public CinemachineVirtualCameraBase LockOnCineVir { get => lockOnCineVir; set => lockOnCineVir = value; }
 
-    // Start is called before the first frame update
     void Start()
     {
-        placon = findPla.GetComponent<Player_Battle_Controller>();
+        playerBattleCon = findPlayerObj.GetComponent<Player_Battle_Controller>();
 
-        placam = findPla.GetComponent <Player_Camera_Controller>();
+        playerCameraCon = findPlayerObj.GetComponent <Player_Camera_Controller>();
 
         mainCineVir = findMainCineVir.GetComponent<CinemachineVirtualCameraBase>();
 
         lockOnCineVir = findLookCineVir.GetComponent<CinemachineVirtualCameraBase>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!lockOnCineVir.enabled) return;
 
 
-        if (targetTramsform[0] != null)
+        if (targetTransform[0] != null)
         {
-            lockOnCineVir.LookAt = targetTramsform[0];
+            lockOnCineVir.LookAt = targetTransform[0];
 
 
-            var distanceToTarget = Vector3.Distance(findPla.transform.position, targetTramsform[0].position);
+            var distanceToTarget = Vector3.Distance(findPlayerObj.transform.position, targetTransform[0].position);
 
+            //マジックナンバー発見
             if (distanceToTarget < 2.5f)
             {
-                placon.Approached = true;
+                playerBattleCon.Approached = true;
             }
             else
             {
-                placon.Approached = false;
+                playerBattleCon.Approached = false;
             }
 
-            if (placon.AttackingLook || placon.Avoidancing)
+            if (playerBattleCon.AttackingLook || playerBattleCon.Avoidancing)
             {
-                if (placon.ForwardAvoidancing) return;
+                if (playerBattleCon.ForwardAvoidancing) return;
 
-                var lookpos = new Vector3(targetTramsform[0].position.x, placon.transform.position.y, targetTramsform[0].position.z);
-                placon.transform.DOLookAt(lookpos, 0.5f);
+                var lookpos = new Vector3(targetTransform[0].position.x, playerBattleCon.transform.position.y, targetTransform[0].position.z);
+                playerBattleCon.transform.DOLookAt(lookpos, 0.5f);
             }
         }
         else
         {
-            placam.OffLockOn();
+            playerCameraCon.OffLockOn();
 
             lockOnCineVir.enabled = false;
         }
-
-
-
-        //if (lockOnCineVir.LookAt &&firstLockOn)
-        //{
-        //    targetTramsform.Remove(targetTramsform[0]);
-        //    lockOnCineVir.enabled = false;
-        //    if (placam.GetTarget)
-        //    { 
-        //    placam.GetTarget = false;
-        //    }
-        //}
+      
     }
 
     private void OnTriggerStay(Collider collider)
     {
         if (collider.gameObject.tag == "Enemy")
         {
-            placon.SoundManager.OneShot_Player_Sound(10);//ロックオンサウンド
+            //マジックナンバー発見
+            playerBattleCon.SoundManager.OneShot_Player_Sound(10);//ロックオンサウンド
 
-            targetTramsform.Add(collider.transform);
+            targetTransform.Add(collider.transform);
 
-            placam.GetTarget = true;
+            playerCameraCon.GetTarget = true;
 
             lockOnCineVir.enabled = true;
 

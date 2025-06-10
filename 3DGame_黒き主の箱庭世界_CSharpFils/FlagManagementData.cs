@@ -7,7 +7,7 @@
 public class FlagManagementData : ScriptableObject
 {
     [SerializeField]
-    private int killCount = 0;
+    private int killCount = 0; //以下全変数の説明書いてください
 
     [SerializeField]
     private bool positionLoad = false;

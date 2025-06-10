@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Playables;
+
 /// <summary>
 /// データをセーブするUIを制御するクラスです。
 /// </summary>
@@ -20,52 +21,30 @@ public class DateSaveUIController : UIManager
     [SerializeField]
     private string selectDataName;
 
-    private bool advisOpen = false;
+    private bool adviseOpen = false;
 
-    //private UIManager uiManager;
-
-    //private GameObject findUiManager;
-
-    //private GameObject findGM;
-
-    //private GameObject findSaveLoad;
-   
-    //private SaveLoadSystem saveLoadSystem;
-
-    //private GameManager gameManager;
 
     [SerializeField]
-    private PlayableDirector saveAdvisMassage;
+    private PlayableDirector saveAdviseMassage;
     [SerializeField]
-    private TextMeshProUGUI AdvisDataSlotNumText;
+    private TextMeshProUGUI AdviseDataSlotNumText;
     [SerializeField]
     private GameObject selectButton;
 
     [SerializeField]
-    private FlagManagementData flagmentData;
+    private FlagManagementData flagManagementData;
 
-    //[SerializeField]
-    //private StatusDate statusDate;
 
     [SerializeField]
     private MemorizeLevelAndSceneName memorizeLevelAndSceneName;
 
-    public bool SaveAdvisOpen { get => advisOpen; set => advisOpen = value; }
+    public bool SaveAdvisOpen { get => adviseOpen; set => adviseOpen = value; }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
         StartUISetting();
-        //findUiManager = GameObject.FindWithTag("UIManager");
-
-        //findGM = GameObject.FindWithTag("GameManager");
-
-        //findSaveLoad = GameObject.FindWithTag("SaveAndLoad");
-
-        //uiManager = findUiManager.GetComponent<UIManager>();
-
-        //gameManager = findGM.GetComponent<GameManager>();
+       
         saveLoadSystem = findSaveLoad.GetComponent<SaveLoadSystem>();
 
       StartInputSaveData();
@@ -73,7 +52,6 @@ public class DateSaveUIController : UIManager
     }
 
 
-    // Update is called once per frame
     void Update()
     {
         if (saveButtonList[0] == null) return;
@@ -96,21 +74,22 @@ public class DateSaveUIController : UIManager
 
     private void StartInputSaveData()//スタート時に呼び出す。
     {
-        if (flagmentData.Data1Exist)
+        //ここの説明書いてください
+        if (flagManagementData.Data1Exist)
         {
-            inputDataTextList[0].text = "Lv." +memorizeLevelAndSceneName.SavedPlayerLevelList[0];
+            inputDataTextList[0].text = "Lv." + memorizeLevelAndSceneName.SavedPlayerLevelList[0];
             inputDataTextList[1].text = "□セーブ地点:";
             inputDataTextList[2].text = "<u>" + NomarizeSceneName(memorizeLevelAndSceneName.SavedSceneNameList[0]).ToString();
         }
 
-        if (flagmentData.Data2Exist)
+        if (flagManagementData.Data2Exist)
         {
             inputDataTextList[3].text = "Lv." + memorizeLevelAndSceneName.SavedPlayerLevelList[1];
             inputDataTextList[4].text = "□セーブ地点:";
             inputDataTextList[5].text = "<u>" + NomarizeSceneName(memorizeLevelAndSceneName.SavedSceneNameList[1]).ToString();
         }
 
-        if (flagmentData.Data3Exist)
+        if (flagManagementData.Data3Exist)
         {
             inputDataTextList[6].text = "Lv." + memorizeLevelAndSceneName.SavedPlayerLevelList[2];
             inputDataTextList[7].text = "□セーブ地点:";
@@ -144,7 +123,7 @@ public class DateSaveUIController : UIManager
     {
         soundManager.OneShotDecisionSound();//決定サウンド
 
-        advisOpen = true;
+        adviseOpen = true;
 
         switch (selectDataName)
         {
@@ -152,28 +131,28 @@ public class DateSaveUIController : UIManager
             case "データ1":
 
                 //if (!flagmentData.SaveData1Exist) return;
-                AdvisDataSlotNumText.text = "<u>セーブデータスロットI</u>に保存しますか？";
+                AdviseDataSlotNumText.text = "<u>セーブデータスロットI</u>に保存しますか？";
                 
                 break;
 
             case "データ2":
 
                 //if (!flagmentData.SaveData2Exist) return;
-                AdvisDataSlotNumText.text = "<u>セーブデータスロットII</u>に保存しますか？";
+                AdviseDataSlotNumText.text = "<u>セーブデータスロットII</u>に保存しますか？";
 
                 break;
 
             case "データ3":
 
                 //if (!flagmentData.SaveData3Exist) return;
-                AdvisDataSlotNumText.text = "<u>セーブデータスロットIII</u>に保存しますか？";
+                AdviseDataSlotNumText.text = "<u>セーブデータスロットIII</u>に保存しますか？";
 
                 break;
 
 
         }  
         
-        saveAdvisMassage.Play();//忠告メッセージを表示
+        saveAdviseMassage.Play();//忠告メッセージを表示
 
     }
 
@@ -185,48 +164,48 @@ public class DateSaveUIController : UIManager
 
             case "データ1":
 
-                if (!flagmentData.Data1Exist)
+                if (!flagManagementData.Data1Exist)
                 {
                     soundManager.OneShotCancelSound();//キャンセルサウンド
                 }
                 else 
                 {
                  soundManager.OneShotDecisionSound();//決定サウンド
-                    advisOpen = true;
-                AdvisDataSlotNumText.text = "<u>セーブデータスロットI</u>を読み込みますか？";
-                saveAdvisMassage.Play();//忠告メッセージを表示
+                    adviseOpen = true;
+                AdviseDataSlotNumText.text = "<u>セーブデータスロットI</u>を読み込みますか？";
+                saveAdviseMassage.Play();//忠告メッセージを表示
                 }
                
                 break;
 
             case "データ2":
 
-                if (!flagmentData.Data2Exist)
+                if (!flagManagementData.Data2Exist)
                 {
                     soundManager.OneShotCancelSound();//キャンセルサウンド
                 }
                 else
                 {
                     soundManager.OneShotDecisionSound();//決定サウンド
-                    advisOpen = true;
-                    AdvisDataSlotNumText.text = "<u>セーブデータスロットII</u>を読み込みますか？";
-                    saveAdvisMassage.Play();//忠告メッセージを表示
+                    adviseOpen = true;
+                    AdviseDataSlotNumText.text = "<u>セーブデータスロットII</u>を読み込みますか？";
+                    saveAdviseMassage.Play();//忠告メッセージを表示
                 }
 
                 break;
 
             case "データ3":
 
-                if (!flagmentData.Data3Exist)
+                if (!flagManagementData.Data3Exist)
                 {
                     soundManager.OneShotCancelSound();//キャンセルサウンド
                 }
                 else
                 {
                     soundManager.OneShotDecisionSound();//決定サウンド
-                    advisOpen = true;
-                    AdvisDataSlotNumText.text = "<u>セーブデータスロットIII</u>を読み込みますか？";
-                    saveAdvisMassage.Play();//忠告メッセージを表示
+                    adviseOpen = true;
+                    AdviseDataSlotNumText.text = "<u>セーブデータスロットIII</u>を読み込みますか？";
+                    saveAdviseMassage.Play();//忠告メッセージを表示
                 }
 
                 break;
@@ -245,25 +224,25 @@ public class DateSaveUIController : UIManager
 
             case "データ1":
 
-                if (flagmentData.Data1Exist) return;
+                if (flagManagementData.Data1Exist) return;
                  
-                flagmentData.Data1Exist = true;
+                flagManagementData.Data1Exist = true;
 
                 break;
 
             case "データ2":
 
-                if (flagmentData.Data2Exist) return;
+                if (flagManagementData.Data2Exist) return;
 
-                flagmentData.Data2Exist = true;
+                flagManagementData.Data2Exist = true;
 
                 break;
 
             case "データ3":
 
-                if (flagmentData.Data3Exist) return;
+                if (flagManagementData.Data3Exist) return;
 
-                flagmentData.Data3Exist = true;
+                flagManagementData.Data3Exist = true;
 
                 break;
 
@@ -309,10 +288,10 @@ public class DateSaveUIController : UIManager
     {
         inputDataTextList[textNum1].text = "Lv." + statusDate.D_PlayerLevel.ToString();
         inputDataTextList[textNum2].text = "□セーブ地点:";
-        inputDataTextList[textNum3].text = "<u>" + NomarizeSceneName(flagmentData.SceneName).ToString();
+        inputDataTextList[textNum3].text = "<u>" + NomarizeSceneName(flagManagementData.SceneName).ToString();
 
         memorizeLevelAndSceneName.SavedPlayerLevelList[memoNum] = statusDate.D_PlayerLevel.ToString();
-        memorizeLevelAndSceneName.SavedSceneNameList[memoNum] = NomarizeSceneName(flagmentData.SceneName).ToString();
+        memorizeLevelAndSceneName.SavedSceneNameList[memoNum] = NomarizeSceneName(flagManagementData.SceneName).ToString();
     }
 
     private string NomarizeSceneName(string MapName)
@@ -355,25 +334,35 @@ public class DateSaveUIController : UIManager
         return MapName;
     }
 
-    public void AdvisPause()
+    public void AdvisPause() //説明書いて 何するためのメソッドか分からんから名前を直せない
     { 
 
-    saveAdvisMassage.GetComponent<PlayableDirector>().Pause();
+        saveAdviseMassage.GetComponent<PlayableDirector>().Pause();
 
-    EventSystem.current.SetSelectedGameObject(selectButton);
+        EventSystem.current.SetSelectedGameObject(selectButton);
 
     }
 
-    public void AdvisResume()
+    public void AdvisResume() //説明書いて 何するためのメソッドか分からんから名前を直せない
     {
         soundManager.OneShotCancelSound();//キャンセルサウンド
 
-        saveAdvisMassage.GetComponent<PlayableDirector>().Resume();
+        saveAdviseMassage.GetComponent<PlayableDirector>().Resume();
     }
 
-    public void AdvisStop()
+    public void AdvisStop() //説明書いて 何するためのメソッドか分からんから名前を直せない
     {
-        advisOpen = false;
+        soundManager.OneShotCancelSound();//キャンセルサウンド
+
+        saveAdviseMassage.GetComponent<PlayableDirector>().Stop();
+
+        adviseOpen = false;
+
+        EventSystem.current.SetSelectedGameObject(selectButton);
+    }
+    public void AdvisClose() //説明書いて 何するためのメソッドか分からんから名前を直せない
+    {
+        adviseOpen = false;
 
         switch (selectDataName)
         {

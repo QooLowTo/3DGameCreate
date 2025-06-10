@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
 /// <summary>
 /// UIで用いる様々なクラスの親クラスです。
 /// </summary>
 public class UIManager : MonoBehaviour
 {
-    protected Player_Battle_Controller plaBCon;
+    protected Player_Battle_Controller playerBattleCon;
 
-    protected Player_UI_Controller plaUCon;
+    protected Player_UI_Controller playerUICon;
 
-    protected Player_Status_Controller plaSCon;
+    protected Player_Status_Controller playerStatCon;
 
-    protected Player_Experience_Manager plaExpManeger;
+    protected Player_Experience_Manager playerEXPManager;
 
     protected BossGolem bossGolem;
 
@@ -29,7 +30,7 @@ public class UIManager : MonoBehaviour
 
     protected DateSaveUIController dataSaveUIController;
 
-    protected GameObject findPlaCon;
+    protected GameObject findPlayerCon;
 
     protected GameObject findGolem;
 
@@ -52,7 +53,7 @@ public class UIManager : MonoBehaviour
     private GameObject findSettingBar;
 
     [SerializeField]
-    private GameObject findGOM;
+    private GameObject findGOM; //名前が分かりづらいからもっと役割に合った名前に変更してください。
 
     [SerializeField]
     private GameObject findDataSave;
@@ -62,10 +63,10 @@ public class UIManager : MonoBehaviour
    
     public SoundManager SoundManager { get => soundManager; set => soundManager = value; }
     public SaveLoadSystem SaveLoadSystem { get => saveLoadSystem; set => saveLoadSystem = value; }
-    public Player_Battle_Controller PlaBCon { get => plaBCon; set => plaBCon = value; }
-    public Player_UI_Controller PlaUCon { get => plaUCon; set => plaUCon = value; }
-    public Player_Status_Controller PlaSCon { get => plaSCon; set => plaSCon = value; }
-    public Player_Experience_Manager PlaExpManeger { get => plaExpManeger; set => plaExpManeger = value; }
+    public Player_Battle_Controller PlayerBattleCon { get => playerBattleCon; set => playerBattleCon = value; }
+    public Player_UI_Controller PlayerUICon { get => playerUICon; set => playerUICon = value; }
+    public Player_Status_Controller PlayerStatCon { get => playerStatCon; set => playerStatCon = value; }
+    public Player_Experience_Manager PlayerEXPManager { get => playerEXPManager; set => playerEXPManager = value; }
     public ButtonSelector ButtonOpen { get => buttonOpen; set => buttonOpen = value; }
     public SettingBarController SettingBar { get => settingBar; set => settingBar = value; }
 
@@ -74,7 +75,6 @@ public class UIManager : MonoBehaviour
     public DateSaveUIController DataSaveUIController { get => dataSaveUIController; set => dataSaveUIController = value; }
    
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         StartUISetting();
@@ -83,24 +83,22 @@ public class UIManager : MonoBehaviour
 
     protected void StartUISetting()
     {
-        findPlaCon = GameObject.FindWithTag("Player");
+        findPlayerCon = GameObject.FindWithTag("Player");
 
         findGolem = GameObject.FindWithTag("Enemy");
 
-        //findSoundManager = GameObject.FindWithTag("GameManager");
-
         findSaveLoad = GameObject.FindWithTag("SaveAndLoad");
 
-        if (findPlaCon != null)
+        if (findPlayerCon != null)
         {
 
-            plaBCon = findPlaCon.GetComponent<Player_Battle_Controller>();
+            playerBattleCon = findPlayerCon.GetComponent<Player_Battle_Controller>();
 
-            plaUCon = findPlaCon.GetComponent<Player_UI_Controller>();
+            playerUICon = findPlayerCon.GetComponent<Player_UI_Controller>();
 
-            plaSCon = findPlaCon.GetComponent<Player_Status_Controller>();
+            playerStatCon = findPlayerCon.GetComponent<Player_Status_Controller>();
 
-            plaExpManeger = findPlaCon.GetComponent<Player_Experience_Manager>();
+            playerEXPManager = findPlayerCon.GetComponent<Player_Experience_Manager>();
         }
 
         if (findGolem != null)
@@ -147,100 +145,5 @@ public class UIManager : MonoBehaviour
         }
     
     }
-
-    //public void SetSelectButtonName(List<ButtonController> buttonConList,List<GameObject> selectButton,string selectButtonName)
-    //{
-    //    for (int i = 0; i < buttonConList.Count; i++)
-    //    {
-    //        //選択中のオブジェクトの名前がnullでないかつ
-    //        //指定のリストの名前と一致いていたら。
-    //        if (buttonConList[i].EventSystem.currentSelectedGameObject.name != null &&
-    //            buttonConList[i].EventSystem.currentSelectedGameObject.name == selectButton[i].name)
-    //        {
-
-    //            selectButtonName = buttonConList[i].EventSystem.currentSelectedGameObject.name;//名前を格納する。
-
-    //        }
-    //    }
-
-
-    //}
-    // Update is called once per frame
-    //void Update()
-    //{
-
-    //}
-
-    //public void SiganalChangeActionMap()
-    //{ 
-    //plaUCon.ChangeActionMap();
-    //}
-
-    //public void SignalGameStart()
-    //{
-    //    soundManager.OnGameStart();
-    //}
-
-    ////public void SiganalUI_Slide_Sound()
-    ////{
-    ////    soundManager.Adios.PlayOneShot(soundManager.Ui_Sounds[1]);
-    ////}
-
-    //public void SingnalBossActionStart()
-    //{
-    //    bossGolem.BossActionStart = false;
-
-    //    bossGolem.FindBossHPSlide.SetActive(true);
-    //}
-
-    ////public void SignalMenuClose()
-    ////{ 
-    ////plaUCon.MenuClose();
-    ////}
-    //public void SiganalSlidePause()
-    //{ 
-    //buttonOpen.SlidePause();
-    //}
-
-    //public void SingnalSlideClose()
-    //{ 
-    //buttonOpen.SlideClose();
-    //}
-
-    //public void SingnalLoading()
-    //{
-    //    StartCoroutine(LoadSceneAsync("LoadingScene"));
-
-    //    IEnumerator LoadSceneAsync(string sceneName)
-    //    {
-    //        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-
-    //        while (!asyncLoad.isDone)
-    //        {
-    //            yield return null;
-    //        }
-    //    }
-    //}
-
-    //public void SiganalSaveSettingValue()
-    //{ 
-    //settingBar.SaveSettingValue();
-    //}
-
-    ////public void SiganalGameOverPlayableStop()
-    ////{ 
-    ////gameOverManager.GameOverPlayableStop();
-    ////}
-
-    //public void SiganalAdvisPause()
-    //{ 
-    //dataSaveUIController.AdvisPause();
-    //}
-
-    //public void SinganalAdvisStop()
-    //{ 
-    //dataSaveUIController.AdvisStop();
-    //}
-
 
 }

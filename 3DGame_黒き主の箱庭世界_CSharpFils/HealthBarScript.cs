@@ -11,27 +11,27 @@ public class HealthBarScript : MonoBehaviour
     Player_Status_Controller plaSta;
 
     [SerializeField]
-    Slider slider;
+    Slider hpSlider;
 
     [SerializeField]
     TextMeshProUGUI hpText;
 
     [SerializeField]
-    TextMeshProUGUI lveText;
+    TextMeshProUGUI lvlText;
 
     [SerializeField]
-    Gradient gradient;
+    Gradient sliderGradient;
 
     [SerializeField]
     Image fill;
 
-    private GameObject findPla;
+    private GameObject findPlayerObj;
 
     private void Start()
     {
-        findPla = GameObject.FindWithTag("Player");
+        findPlayerObj = GameObject.FindWithTag("Player");
 
-        plaSta = findPla.GetComponent<Player_Status_Controller>();
+        plaSta = findPlayerObj.GetComponent<Player_Status_Controller>();
 
         gameObject.SetActive(false);
     }
@@ -42,17 +42,17 @@ public class HealthBarScript : MonoBehaviour
     /// <param name="health"></param>
     public void SetHealth(int health) { 
     
-        slider.value = health;
+        hpSlider.value = health;
 
         hpText.text = "<size=50>■H</size>P:<size=50>" + plaSta.LivePlayerHP + "■";
 
-        lveText.text = "□<size=60>L</size>v.<size=60>" + plaSta.PlayerLevel + "</size>□";
+        lvlText.text = "□<size=60>L</size>v.<size=60>" + plaSta.PlayerLevel + "</size>□";
 
-        hpText.color = gradient.Evaluate(slider.normalizedValue);
+        hpText.color = sliderGradient.Evaluate(hpSlider.normalizedValue);
 
-        lveText.color = gradient.Evaluate(slider.normalizedValue);
+        lvlText.color = sliderGradient.Evaluate(hpSlider.normalizedValue);
 
-        fill.color = gradient.Evaluate(slider.normalizedValue);
+        fill.color = sliderGradient.Evaluate(hpSlider.normalizedValue);
 
     }
     /// <summary>
@@ -61,17 +61,17 @@ public class HealthBarScript : MonoBehaviour
     /// <param name="maxHealth"></param>
     public void SetMaxHealth(int maxHealth) { 
     
-        slider.maxValue = maxHealth;
+        hpSlider.maxValue = maxHealth;
 
-        slider.value = maxHealth;
+        hpSlider.value = maxHealth;
 
-        hpText.color = gradient.Evaluate(1f);
+        hpText.color = sliderGradient.Evaluate(1f);
 
-        fill.color = gradient.Evaluate(1f);
+        fill.color = sliderGradient.Evaluate(1f);
     }
 
     public void HealthDeath()
     { 
-    fill.enabled = false;
+        fill.enabled = false;
     }
 }
